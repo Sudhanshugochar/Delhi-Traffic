@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "form.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "student.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "jobprovider.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server.js"
+    },
+    {
+      "src": "/form.html",
+      "dest": "/form.html"
+    },
+    {
+      "src": "/student.html",
+      "dest": "/student.html"
+    },
+    {
+      "src": "/jobprovider.html",
+      "dest": "/jobprovider.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/form.html"
+    }
+  ],
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "JWT_SECRET": "@jwt_secret"
+  }
+}

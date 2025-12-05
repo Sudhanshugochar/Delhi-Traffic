@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Authentication Form</title>
+    <!-- Load Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font and basic styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .container-box {
+            background-color: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.05);
+        }
+        .input-error {
+            border-color: #ef4444; /* red-500 */
+        }
+        .error-message {
+            color: #ef4444; /* red-500 */
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        /* Style the anchor tags to look like cards */
+        .role-card {
+            text-decoration: none; /* Remove underline from link */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main Application Container -->
+    <div class="w-full max-w-md">
+
+        <!-- 1. Authentication View (Login/Sign Up) -->
+        <div id="auth-view" class="container-box rounded-xl p-8 transition-opacity duration-300">
+            
+            <div class="text-center mb-8">
+                <h1 id="form-title" class="text-3xl font-extrabold text-gray-900">Sign Up for an Account</h1>
+                <p class="text-sm text-gray-500 mt-1" id="form-subtitle">Create your secure profile.</p>
+            </div>
+
+            <!-- Sign Up Form (Default View) -->
+            <form id="signup-form" class="space-y-6" onsubmit="handleFormSubmission(event, 'Sign Up')">
+                <div>
+                    <label for="signup-username" class="block text-sm font-medium text-gray-700 mb-1">Username (Characters only)</label>
+                    <input type="text" id="signup-username" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 transition duration-150"
+                           placeholder="e.g., JaneDoeProfile">
+                    <p id="username-error" class="error-message hidden">Username must contain only letters and spaces.</p>
+                </div>
+                
+                <div>
+                    <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="signup-email" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 transition duration-150"
+                           placeholder="name@example.com">
+                </div>
+
+                <div>
+                    <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="signup-password" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 transition duration-150"
+                           placeholder="Must be at least 6 characters">
+                </div>
+
+                <button type="submit" id="signup-btn"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150">
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Login Form (Hidden by Default) -->
+            <form id="login-form" class="space-y-6 hidden" onsubmit="handleFormSubmission(event, 'Login')">
+                <div>
+                    <label for="login-identifier" class="block text-sm font-medium text-gray-700 mb-1">Email or Username</label>
+                    <input type="text" id="login-identifier" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                           placeholder="Email or Username">
+                </div>
+
+                <div>
+                    <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="login-password" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                           placeholder="********">
+                </div>
+
+                <button type="submit" id="login-btn"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150">
+                    Log In
+                </button>
+            </form>
+
+            <!-- Toggle Switch -->
+            <div class="mt-6 text-center">
+                <p id="toggle-text" class="text-sm text-gray-600">
+                    Already have an account? 
+                    <button type="button" onclick="toggleForm()" class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none">
+                        Sign In
+                    </button>
+                </p>
+            </div>
+        </div>
+
+        <!-- 2. Role Selection View (Hidden by default) -->
+        <div id="role-view" class="container-box rounded-xl p-8 transition-opacity duration-300 hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-extrabold text-gray-900">What best describes you?</h2>
+                <p class="text-sm text-gray-500 mt-1">Select your role to proceed to the main portal.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Student Card - Now using <a> tag with href -->
+                <a href="student.html"
+                    class="role-card w-full flex items-center p-6 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition duration-150 focus:outline-none focus:ring-4 focus:ring-blue-300 text-left shadow-md">
+                    <svg class="w-8 h-8 text-blue-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.467 9.246 5.257 7.5 5.257V6.252C9.402 6.848 11.232 7.652 13 8.577m-1 4.316v.293c.125.048.25.099.375.152A2.755 2.755 0 0118 10.25v-2a3.758 3.758 0 00-4.50-3.758C12.392 4.49 12 4.195 12 3.75V3c0-.444.392-.734.75-.826C15.688 1.968 18 3.2 18 5.75v3.5c0 2.25-1.5 4.167-3.75 4.67C14.12 14.18 13.5 14.004 13 13.916m-1 0a2.757 2.757 0 01-3.75 3.332C7.12 17.18 6.5 17.004 6 16.916M15 12.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zM6 16.916V17.5c0 2.55 2.312 3.782 4.25 3.25C10.392 20.805 10 20.51 10 20.062v-1.042c0-.444-.392-.734-.75-.826A3.758 3.758 0 005.25 14.25v-2a3.757 3.757 0 00-3.75-3.75v-.5A2.75 2.75 0 011 7.25v-2A2.75 2.75 0 013.75 3.75h.5v.5A2.25 2.25 0 106.75 6.5V7a2.25 2.25 0 100 4.5z"></path></svg>
+                    <div>
+                        <p class="text-lg font-semibold text-gray-800">Student</p>
+                        <p class="text-sm text-gray-600">I am currently enrolled in an educational program.</p>
+                    </div>
+                </a>
+                
+                <!-- Job Provider Card - Now using <a> tag with href -->
+                <a href="jobprovider.html"
+                    class="role-card w-full flex items-center p-6 bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg transition duration-150 focus:outline-none focus:ring-4 focus:ring-green-300 text-left shadow-md">
+                    <svg class="w-8 h-8 text-green-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.51 23.51 0 0112 15c-3.183 0-6.22-1.258-8.5-3.745M12 15v5m0 0l-4-4m4 4l4-4m-4-15v4m-4-4h8m-4 15h4m-4 0v-4m-4 4h8m-4-4V7a2 2 0 00-2-2H8a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-3"></path></svg>
+                    <div>
+                        <p class="text-lg font-semibold text-gray-800">Job Provider</p>
+                        <p class="text-sm text-gray-600">I am an employer or recruiter seeking talent.</p>
+                    </div>
+                </a>
+            </div>
+            
+            <button onclick="resetApp()" 
+                    class="mt-6 w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150">
+                Not the right account? Log Out
+            </button>
+        </div>
+
+
+        <!-- Message Box (Error/Success) -->
+        <div id="message-box" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full">
+                <h3 id="message-title" class="text-xl font-bold mb-3 text-gray-800"></h3>
+                <p id="message-content" class="text-gray-600 mb-4"></p>
+                <button onclick="hideMessage()" class="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-150">
+                    Close
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- API CONFIGURATION ---
+        // Prefer relative API path when served from the same origin
+        // If the page is opened from Live Server or a different origin (like :5500),
+        // fall back to the backend at http://localhost:8080
+        let BASE_API_URL = '/api';
+        try {
+            const origin = window.location.origin;
+            // If origin does not match local backend origin, use explicit backend URL
+            if (!origin.includes(':8080') && !origin.includes('localhost:8080')) {
+                BASE_API_URL = 'http://localhost:8080/api';
+            }
+        } catch (e) {
+            BASE_API_URL = 'http://localhost:8080/api';
+        }
+
+        // --- GLOBAL STATE & ELEMENTS ---
+        const authView = document.getElementById('auth-view');
+        const roleView = document.getElementById('role-view');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const formTitle = document.getElementById('form-title');
+        const formSubtitle = document.getElementById('form-subtitle');
+        const toggleText = document.getElementById('toggle-text');
+        const usernameInput = document.getElementById('signup-username');
+        const usernameError = document.getElementById('username-error');
+        
+        let isLoginView = false; // Start on Sign Up view
+        let activeSession = { token: null, user: { _id: null, username: null } }; 
+
+        // --- UI & VALIDATION FUNCTIONS ---
+
+        function toggleForm() {
+            isLoginView = !isLoginView;
+            
+            if (isLoginView) {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                formTitle.textContent = 'Sign In to Your Account';
+                formSubtitle.textContent = 'Welcome back!';
+                toggleText.innerHTML = `New to the platform? 
+                    <button type="button" onclick="toggleForm()" class="font-medium text-green-600 hover:text-green-500 focus:outline-none">
+                        Create an account
+                    </button>`;
+            } else {
+                signupForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                formTitle.textContent = 'Sign Up for an Account';
+                formSubtitle.textContent = 'Create your secure profile.';
+                toggleText.innerHTML = `Already have an account? 
+                    <button type="button" onclick="toggleForm()" class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none">
+                        Sign In
+                    </button>`;
+            }
+        }
+        
+        // Validation check for username (only characters, as requested)
+        usernameInput.addEventListener('input', validateUsername);
+        
+        function validateUsername() {
+            const username = usernameInput.value.trim();
+            // Regex: only allows letters (a-z, A-Z) and spaces.
+            const isValid = /^[a-zA-Z\s]+$/.test(username) || username === ''; 
+
+            if (!isValid) {
+                usernameInput.classList.add('input-error');
+                usernameError.classList.remove('hidden');
+                return false;
+            } else {
+                usernameInput.classList.remove('input-error');
+                usernameError.classList.add('hidden');
+                return true;
+            }
+        }
+
+        function showMessage(title, content) {
+            document.getElementById('message-title').textContent = title;
+            document.getElementById('message-content').textContent = content;
+            document.getElementById('message-box').classList.remove('hidden');
+            document.getElementById('message-box').classList.add('flex');
+        }
+
+        function hideMessage() {
+            document.getElementById('message-box').classList.add('hidden');
+            document.getElementById('message-box').classList.remove('flex');
+        }
+
+        function resetApp() {
+            activeSession = { token: null, user: { _id: null, username: null } };
+            // Clear persistent session and reload
+            try { localStorage.removeItem('activeSession'); } catch (e) { /* ignore */ }
+            window.location.reload(); 
+        }
+
+        // --- API & SUBMISSION LOGIC ---
+
+        // Real API request function using fetch
+        async function callApi(endpoint, body) {
+            try {
+                const res = await fetch(`${BASE_API_URL}/${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                    mode: 'cors'
+                });
+
+                const text = await res.text();
+                // try to parse JSON if possible
+                let data = null;
+                try { data = text ? JSON.parse(text) : null; } catch (e) { data = text; }
+
+                if (!res.ok) {
+                    const errMsg = (data && data.message) ? data.message : `HTTP ${res.status}`;
+                    throw new Error(errMsg);
+                }
+
+                return data;
+            } catch (err) {
+                console.error('API call error:', err);
+                // rethrow to be handled by caller
+                throw err;
+            }
+        }
+
+        async function handleFormSubmission(event, formType) {
+            event.preventDefault(); 
+
+            const submitButton = formType === 'Login' ? 
+                document.getElementById('login-btn') : document.getElementById('signup-btn');
+            
+            submitButton.disabled = true;
+            submitButton.textContent = formType === 'Login' ? 'Authenticating...' : 'Registering...';
+            
+            try {
+                let endpoint, body;
+                
+                if (formType === 'Sign Up') {
+                    if (!validateUsername()) {
+                        showMessage("Validation Error", "Please correct the username before signing up.");
+                        return;
+                    }
+                    const username = document.getElementById('signup-username').value;
+                    const email = document.getElementById('signup-email').value;
+                    const password = document.getElementById('signup-password').value;
+                    
+                    endpoint = 'signup';
+                    body = { username, email, password };
+                } else { // Login
+                    const identifier = document.getElementById('login-identifier').value;
+                    const password = document.getElementById('login-password').value;
+                    
+                    endpoint = 'login';
+                    body = { identifier, password };
+                }
+
+                const apiResponse = await callApi(endpoint, body);
+
+                if (apiResponse.success) {
+                    activeSession.token = apiResponse.token;
+                    activeSession.user = apiResponse.user;
+                    // Persist session so other pages (student/jobprovider) can read it
+                    try { localStorage.setItem('activeSession', JSON.stringify(activeSession)); } catch (e) { console.warn('Failed to persist session', e); }
+                    
+                    // Decide where to go next
+                    if (apiResponse.user.role) {
+                        const destination = apiResponse.user.role === 'Student' ? 'student.html' : 'jobprovider.html';
+                        showMessage("Login Success", `Welcome back! Redirecting to ${apiResponse.user.role} portal.`);
+                        
+                        // If student, fetch their saved profile
+                        if (apiResponse.user.role === 'Student') {
+                            try {
+                                const profileResponse = await callApi('get-profile', { userId: apiResponse.user._id });
+                                if (profileResponse.success && profileResponse.profile) {
+                                    activeSession.user.profileComplete = profileResponse.profile.completeness >= 100;
+                                    activeSession.user.profileData = profileResponse.profile;
+                                    console.log('Profile loaded:', { complete: activeSession.user.profileComplete, completeness: profileResponse.profile.completeness });
+                                } else {
+                                    // No profile exists yet
+                                    activeSession.user.profileComplete = false;
+                                    activeSession.user.profileData = null;
+                                    console.log('No profile found for user, marking as incomplete');
+                                }
+                            } catch (e) {
+                                console.log('Profile fetch during login:', e);
+                                activeSession.user.profileComplete = false;
+                            }
+                        }
+                        
+                        // Submit form data before redirecting
+                        try {
+                            await callApi('submit-form', {
+                                userId: apiResponse.user._id,
+                                username: apiResponse.user.username,
+                                email: apiResponse.user.email,
+                                role: apiResponse.user.role
+                            });
+                        } catch (e) {
+                            console.log('Form submission during login:', e);
+                        }
+                        
+                        // Update localStorage with profile data before redirect
+                        try { localStorage.setItem('activeSession', JSON.stringify(activeSession)); } catch (e) { console.warn('Failed to persist session', e); }
+                        
+                        setTimeout(() => { window.location.href = destination; }, 1000);
+                    } else {
+                        // New signup: transition to role selection and persist user id in session
+                        showMessage("Sign Up Success", "Account created! Please select your role.");
+                        // store user id to call set-role later
+                        activeSession.user = apiResponse.user;
+                        try { localStorage.setItem('activeSession', JSON.stringify(activeSession)); } catch (e) { console.warn('Failed to persist session', e); }
+                        setTimeout(() => {
+                            authView.classList.add('hidden');
+                            roleView.classList.remove('hidden');
+                        }, 500);
+                    }
+                } else {
+                    showMessage("Authentication Failed", "Invalid credentials or user already exists.");
+                }
+
+            } catch (error) {
+                console.error("Submission Error:", error);
+                showMessage("System Error", "Could not communicate with the server. See console for details.");
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = formType === 'Login' ? 'Log In' : 'Create Account';
+            }
+        }
+
+        // Intercept role-card clicks to set role on the backend first
+        document.querySelectorAll('.role-card').forEach(el => {
+            el.addEventListener('click', async (e) => {
+                e.preventDefault();
+                // determine role from link target or content
+                const href = el.getAttribute('href');
+                const roleText = el.querySelector('p').textContent.trim();
+                const role = roleText === 'Student' ? 'Student' : 'Job Provider';
+
+                if (!activeSession.user || !activeSession.user._id) {
+                    // If no user in session, just redirect
+                    window.location.href = href;
+                    return;
+                }
+
+                try {
+                    const resp = await callApi('set-role', { userId: activeSession.user._id, role });
+                    if (resp.success) {
+                        activeSession.user.role = role; // update session
+                        try { localStorage.setItem('activeSession', JSON.stringify(activeSession)); } catch (e) { console.warn('Failed to persist session', e); }
+                        // Now submit the form data to the database
+                        await callApi('submit-form', {
+                            userId: activeSession.user._id,
+                            username: activeSession.user.username,
+                            email: activeSession.user.email,
+                            role: role
+                        });
+                        window.location.href = href;
+                    } else {
+                        showMessage('Error', resp.message || 'Could not set role');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    showMessage('Error', 'Network error while setting role');
+                }
+            });
+        });
+        
+        // Ensure the correct form is displayed initially
+        window.onload = () => {
+             // Check if a role was somehow preserved in the mock session and redirect if so (optional for robustness)
+             if (activeSession.user.role) {
+                const destination = activeSession.user.role === 'Student' ? 'student.html' : 'jobprovider.html';
+                window.location.href = destination;
+             }
+             toggleForm(); // Set initial form view to Sign Up
+        }
+    </script>
+
+</body>
+</html>

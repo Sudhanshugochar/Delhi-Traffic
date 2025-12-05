@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font and basic styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Lighter background */
+        }
+        .sidebar {
+            min-width: 250px;
+        }
+        .nav-item.active {
+            background-color: #4f46e5; /* Indigo 600 */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        /* Style for smooth transition on content change */
+        .content-section {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .content-section.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md lg:hidden">
+        <div class="p-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-800">Student Career Hub</h1>
+            <button id="menu-btn" class="text-indigo-600 hover:text-indigo-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="flex flex-1">
+        
+        <nav id="sidebar" class="sidebar bg-gray-900 text-white p-6 space-y-4 shadow-xl fixed inset-y-0 left-0 transform -translate-x-full lg:relative lg:translate-x-0 transition-transform duration-300 z-30 w-64">
+            
+            <div class="text-3xl font-extrabold mb-8 text-indigo-400">
+                CareerLaunch
+            </div>
+            
+            <ul class="space-y-3">
+                <li>
+                    <a href="#" data-section="dashboard" class="nav-item flex items-center p-3 rounded-lg hover:bg-gray-700 transition duration-150 active" onclick="showSection(event, 'dashboard')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-section="view-jobs" class="nav-item flex items-center p-3 rounded-lg hover:bg-gray-700 transition duration-150" onclick="showSection(event, 'view-jobs')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.51 23.51 0 0112 15c-3.183 0-6.22-1.258-8.5-3.745M12 15v5m0 0l-4-4m4 4l4-4m-9-11H6a2 2 0 00-2 2v10a2 2 0 002 2h4"></path></svg>
+                        View Jobs
+                    </a>
+                </li>
+                 <li>
+                    <a href="#" data-section="profile" class="nav-item flex items-center p-3 rounded-lg hover:bg-gray-700 transition duration-150" onclick="showSection(event, 'profile')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        Complete Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-section="notifications" class="nav-item flex items-center p-3 rounded-lg hover:bg-gray-700 transition duration-150" onclick="showSection(event, 'notifications')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-2.81A5.002 5.002 0 0017 9V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4a5.002 5.002 0 003.405 4.19L9 17h5a2 2 0 002-2v-4a5.002 5.002 0 00-3.405-4.19zM12 17a2 2 0 01-2 2h4a2 2 0 01-2-2z"></path></svg>
+                        Notifications
+                        <span id="notif-count" class="ml-auto inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">0</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="pt-10 border-t border-gray-700">
+                 <button onclick="logout()" class="w-full flex items-center p-3 rounded-lg bg-red-600 hover:bg-red-700 transition duration-150">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    Logout
+                </button>
+                <!-- Sidebar user info (populated when authenticated) -->
+                <div id="sidebar-user" class="mt-4 hidden items-center space-x-3">
+                    <div id="user-avatar" class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold"></div>
+                    <div>
+                        <p id="sidebar-username" class="text-sm font-semibold">Guest</p>
+                        <p id="sidebar-email" class="text-xs text-gray-300">not signed in</p>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <main class="flex-1 p-6 lg:p-10 transition-all duration-300">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-6">Student Career Portal</h2>
+
+            <section id="dashboard-content" class="content-section active bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-3xl font-semibold text-gray-800 mb-4 border-b pb-2">Application Dashboard</h3>
+                <p class="text-gray-600 mb-6">Track your job applications and profile completeness.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-indigo-50 p-6 rounded-lg shadow-md">
+                        <p class="text-sm font-medium text-indigo-600">Jobs Applied</p>
+                        <p class="text-4xl font-bold text-indigo-800 mt-1">14</p>
+                        <p class="text-sm text-gray-500 mt-2">Total applications submitted</p>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-lg shadow-md">
+                        <p class="text-sm font-medium text-green-600">Interviewing</p>
+                        <p class="text-4xl font-bold text-green-800 mt-1">3</p>
+                        <p class="text-sm text-gray-500 mt-2">In active interview stages</p>
+                    </div>
+                    <div class="bg-yellow-50 p-6 rounded-lg shadow-md">
+                        <p class="text-sm font-medium text-yellow-600">Jobs Saved</p>
+                        <p class="text-4xl font-bold text-yellow-800 mt-1">8</p>
+                        <p class="text-sm text-gray-500 mt-2">Jobs you plan to apply for</p>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h4 class="text-2xl font-semibold text-gray-800 mb-3">Application Status Summary</h4>
+                    <ul class="space-y-3" id="application-status-list">
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-green-500">Interview scheduled for 'Junior Data Analyst' - Monday 2:00 PM</li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-indigo-500">Application submitted for 'Software Engineering Intern'</li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-yellow-500">Resume viewed by 'Tech Solutions Inc.'</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="view-jobs-content" class="content-section hidden bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-3xl font-semibold text-gray-800 mb-4 border-b pb-2">Find Your Next Opportunity</h3>
+                <p class="text-gray-600 mb-6">Search and filter job postings by location to find the perfect match. <span class="font-bold text-red-500">Note: Only approved jobs are displayed here.</span></p>
+                
+                <div class="mb-8 p-4 bg-gray-50 rounded-lg shadow-inner flex flex-col sm:flex-row gap-4">
+                    <input type="text" id="location-filter" placeholder="Filter by Location (e.g., Remote, New York, London)" 
+                           class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    <button onclick="fetchJobs()" class="w-full sm:w-auto py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-150">
+                        Search Jobs
+                    </button>
+                </div>
+                
+                <div class="space-y-4" id="job-listings">
+                    <p class="text-gray-500">Click 'Search Jobs' to load approved listings.</p>
+                </div>
+            </section>
+
+            <section id="profile-content" class="content-section hidden bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-3xl font-semibold text-gray-800 mb-4 border-b pb-2">Complete Your Career Profile</h3>
+                <p class="text-gray-600 mb-6">Build a comprehensive profile to attract top job providers.</p>
+
+                <form id="profile-form" class="space-y-8">
+                    <fieldset class="border border-gray-200 p-6 rounded-lg space-y-4">
+                        <legend class="text-xl font-semibold text-gray-700 px-2">1. Basic Information</legend>
+                        <div>
+                            <label for="full-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="full-name" placeholder="John Doe" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">Contact Email</label>
+                            <input type="email" id="contact-email" placeholder="john.doe@university.edu" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="border border-gray-200 p-6 rounded-lg space-y-4">
+                        <legend class="text-xl font-semibold text-gray-700 px-2">2. Education</legend>
+                        <div>
+                            <label for="university" class="block text-sm font-medium text-gray-700 mb-1">University / Institution</label>
+                            <input type="text" id="university" placeholder="University of Example" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                         <div>
+                            <label for="degree" class="block text-sm font-medium text-gray-700 mb-1">Degree / Major</label>
+                            <input type="text" id="degree" placeholder="B.S. Computer Science" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="grad-year" class="block text-sm font-medium text-gray-700 mb-1">Expected Graduation Year</label>
+                                <input type="number" id="grad-year" placeholder="2025" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label for="gpa" class="block text-sm font-medium text-gray-700 mb-1">GPA (Optional)</label>
+                                <input type="text" id="gpa" placeholder="3.8" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="border border-gray-200 p-6 rounded-lg space-y-4">
+                        <legend class="text-xl font-semibold text-gray-700 px-2">3. Experience & Skills</legend>
+                        <div>
+                            <label for="work-experience" class="block text-sm font-medium text-gray-700 mb-1">Work/Internship Experience (Brief Summary)</label>
+                            <textarea id="work-experience" rows="3" placeholder="e.g., 6-month internship at Acme Corp as a Dev intern, focusing on React development." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"></textarea>
+                        </div>
+                        <div>
+                            <label for="skills" class="block text-sm font-medium text-gray-700 mb-1">Relevant Skills (Comma separated)</label>
+                            <input type="text" id="skills" placeholder="e.g., Python, SQL, Cloud Computing, Public Speaking" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label for="projects" class="block text-sm font-medium text-gray-700 mb-1">Key Projects / Achievements</label>
+                            <textarea id="projects" rows="3" placeholder="Describe a key project or academic achievement." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"></textarea>
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" id="save-profile-btn" class="w-full md:w-auto flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150">
+                        Save Profile
+                    </button>
+                </form>
+            </section>
+
+
+            <section id="notifications-content" class="content-section hidden bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-3xl font-semibold text-gray-800 mb-4 border-b pb-2">Notifications Center</h3>
+                <p class="text-gray-600 mb-6">Your alerts on job approval status and other important updates.</p>
+
+                <div class="space-y-4" id="notifications-list">
+                    <p class="text-gray-500" id="no-notifications-msg">No new notifications.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="message-box" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full">
+            <h3 id="message-title" class="text-xl font-bold mb-3 text-gray-800"></h3>
+            <p id="message-content" class="text-gray-600 mb-4"></p>
+            <button onclick="hideMessage()" class="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-150">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- CHAT WIDGET -->
+    <div id="chat-widget" class="fixed bottom-6 right-6 z-50">
+        <div id="chat-panel" class="hidden w-80 bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-3 bg-indigo-600 text-white font-semibold">Assistant</div>
+            <div id="chat-messages" class="p-3 space-y-2 max-h-64 overflow-y-auto text-sm text-gray-800"></div>
+            <div class="p-3 border-t border-gray-200 flex gap-2">
+                <input id="chat-input" type="text" placeholder="Ask a question..." class="flex-1 px-3 py-2 border rounded-lg focus:outline-none" />
+                <button id="chat-send" class="px-3 py-2 bg-indigo-600 text-white rounded-lg">Send</button>
+            </div>
+        </div>
+        <button id="chat-toggle" title="Chat with assistant" class="w-14 h-14 rounded-full bg-indigo-600 text-white shadow-lg flex items-center justify-center hover:bg-indigo-700">💬</button>
+    </div>
+
+    <script>
+        // --- API CONFIGURATION ---
+        let BASE_API_URL = '/api';
+        try {
+            const origin = window.location.origin;
+            // Check if served from a non-backend origin (like Live Server)
+            if (!origin.includes(':8080') && !origin.includes('localhost:8080')) {
+                BASE_API_URL = 'http://localhost:8080/api';
+            }
+        } catch (e) {
+            BASE_API_URL = 'http://localhost:8080/api';
+        }
+
+        // --- GLOBAL STATE & ELEMENTS ---
+        const sidebar = document.getElementById('sidebar');
+        const menuBtn = document.getElementById('menu-btn');
+        const jobListingsDiv = document.getElementById('job-listings');
+        const notifCountSpan = document.getElementById('notif-count');
+        const notificationsList = document.getElementById('notifications-list');
+
+        // Session management: try to read persisted session else use empty
+        let activeSession = { user: { _id: null, username: null, email: null, role: null }, token: null };
+        try {
+            const stored = localStorage.getItem('activeSession');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (parsed && parsed.user) activeSession = parsed;
+            }
+        } catch (e) {
+            console.warn('Failed to read persisted session', e);
+        }
+
+        // Render the small user widget in the sidebar (initials avatar + username/email)
+        function renderSidebarUser() {
+            const container = document.getElementById('sidebar-user');
+            if (!container) return;
+
+            if (activeSession && activeSession.user && activeSession.user._id) {
+                const avatar = document.getElementById('user-avatar');
+                const nameEl = document.getElementById('sidebar-username');
+                const emailEl = document.getElementById('sidebar-email');
+
+                // Create initials from username or email
+                const nameSource = activeSession.user.username || activeSession.user.email || 'U';
+                const initials = nameSource.split(/\s+/).map(s => s[0]).slice(0,2).join('').toUpperCase();
+                if (avatar) avatar.textContent = initials;
+                if (nameEl) nameEl.textContent = activeSession.user.username || activeSession.user.email || 'User';
+                if (emailEl) emailEl.textContent = activeSession.user.email || '';
+
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        // --- UI & UTILITY FUNCTIONS ---
+        function showMessage(title, content) {
+            document.getElementById('message-title').textContent = title;
+            document.getElementById('message-content').textContent = content;
+            document.getElementById('message-box').classList.remove('hidden');
+            document.getElementById('message-box').classList.add('flex');
+        }
+
+        function hideMessage() {
+            document.getElementById('message-box').classList.add('hidden');
+            document.getElementById('message-box').classList.remove('flex');
+        }
+
+        function logout() {
+            activeSession = { user: { _id: null, username: null } };
+            try { localStorage.removeItem('activeSession'); } catch (e) { /* ignore */ }
+            window.location.href = 'form.html'; 
+        }
+
+        function showSection(event, sectionId) {
+            event.preventDefault();
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('active'); 
+            });
+
+            const activeSection = document.getElementById(`${sectionId}-content`);
+            if (activeSection) {
+                activeSection.classList.remove('hidden');
+                setTimeout(() => { activeSection.classList.add('active'); }, 10);
+            }
+
+            if (sectionId === 'view-jobs') {
+                fetchJobs(); // Fetch jobs every time the section is viewed
+            } else if (sectionId === 'notifications') {
+                fetchStudentNotifications();
+            } else if (sectionId === 'profile') {
+                loadSavedProfile(); // Load saved profile data when profile section is opened
+            }
+
+            if (window.innerWidth < 1024) {
+                sidebar.classList.add('-translate-x-full');
+            }
+        }
+
+        // --- API CALL UTILITY (simplified GET for jobs) ---
+        async function callApi(endpoint, body = null, method = 'POST') {
+            const fetchOptions = {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                mode: 'cors'
+            };
+
+            if (body) {
+                fetchOptions.body = JSON.stringify(body);
+            }
+
+            try {
+                const res = await fetch(`${BASE_API_URL}/${endpoint}`, fetchOptions);
+
+                const text = await res.text();
+                let data = null;
+                try { data = text ? JSON.parse(text) : null; } catch (e) { data = text; }
+
+                if (!res.ok) {
+                    const errMsg = (data && data.message) ? data.message : `HTTP ${res.status}`;
+                    throw new Error(errMsg);
+                }
+                return data;
+            } catch (err) {
+                console.error('API call error:', err);
+                throw err;
+            }
+        }
+
+        // --- JOB LISTING AND APPLY LOGIC ---
+        async function fetchJobs() {
+            jobListingsDiv.innerHTML = '<p class="text-indigo-600">Loading approved jobs...</p>';
+            try {
+                // Get the location filter value
+                const locationFilter = document.getElementById('location-filter').value.trim();
+                
+                // Build query parameters for the API request
+                let apiUrl = 'jobs';
+                if (locationFilter) {
+                    apiUrl = `jobs?location=${encodeURIComponent(locationFilter)}`;
+                }
+                
+                // Fetch uses a GET request to /api/jobs with optional location parameter
+                const apiResponse = await callApi(apiUrl, null, 'GET');
+
+                jobListingsDiv.innerHTML = '';
+                if (apiResponse.jobs.length === 0) {
+                    jobListingsDiv.innerHTML = '<p class="text-gray-500">No approved job listings available at this time.</p>';
+                    return;
+                }
+
+                apiResponse.jobs.forEach(job => {
+                    const jobCard = document.createElement('div');
+                    jobCard.className = 'p-5 border border-gray-200 rounded-xl shadow hover:shadow-lg transition duration-150';
+                    jobCard.innerHTML = `
+                        <h4 class="text-xl font-bold text-gray-800">${job.title}</h4>
+                        <p class="text-sm text-indigo-600">Provider Email: ${job.providerEmail || 'Not provided'}</p>
+                        <p class="text-sm text-gray-500 mt-1">Location: ${job.location} | Status: <span class="text-green-600 font-medium">Approved</span></p>
+                        <p class="mt-2 text-gray-700">${job.description}</p>
+                        <button data-job-id="${job._id}" onclick="handleApplyJob('${job._id}', this)" class="mt-3 text-sm font-medium text-white bg-indigo-500 px-4 py-2 rounded-full hover:bg-indigo-600 apply-btn">
+                            Apply Now
+                        </button>
+                    `;
+                    jobListingsDiv.appendChild(jobCard);
+                });
+
+            } catch (error) {
+                console.error("Job fetching error:", error);
+                jobListingsDiv.innerHTML = '<p class="text-red-500">Error fetching job listings from the server.</p>';
+            }
+        }
+
+        async function handleApplyJob(jobId, buttonElement) {
+            buttonElement.disabled = true;
+            buttonElement.textContent = 'Applying...';
+            // Enforce profile completion: only allow apply if user completed profile
+            if (!activeSession.user || !activeSession.user.profileComplete) {
+                showMessage('Complete Your Profile', 'Please complete your profile (100%) before applying for jobs.');
+                buttonElement.disabled = false;
+                buttonElement.textContent = 'Apply Now';
+                // optionally navigate user to profile section
+                showSection(new Event('click'), 'profile');
+                return;
+            }
+
+            try {
+                const apiResponse = await callApi('apply-job', { 
+                    userId: activeSession.user._id, 
+                    jobId 
+                });
+
+                if (apiResponse.success) {
+                    showMessage("Application Successful", apiResponse.message);
+                    buttonElement.textContent = 'Applied';
+                    buttonElement.classList.remove('bg-indigo-500', 'hover:bg-indigo-600');
+                    buttonElement.classList.add('bg-gray-500');
+                } else {
+                    showMessage("Application Failed", apiResponse.message || "Could not submit application.");
+                    buttonElement.disabled = false;
+                    buttonElement.textContent = 'Apply Now';
+                }
+            } catch (error) {
+                showMessage("System Error", error.message || "Network error during application submission.");
+                buttonElement.disabled = false;
+                buttonElement.textContent = 'Apply Now';
+            }
+        }
+        
+        // --- STUDENT NOTIFICATION LOGIC ---
+        async function fetchStudentNotifications() {
+             try {
+                const apiResponse = await callApi('student-notifications', { userId: activeSession.user._id });
+                
+                notificationsList.innerHTML = '';
+                
+                // Filter to show ONLY approved notifications
+                const approvedNotifs = apiResponse.notifications.filter(notif => notif.newStatus === 'Approved');
+               
+                approvedNotifs.forEach(notif => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'flex items-start p-6 bg-green-50 border-l-4 border-green-500 rounded-lg shadow-md';
+
+                    // Clean, simple message: "You are selected for [Job Name]"
+                    const messageHtml = `<p class="text-base text-gray-800 font-medium">🎉 You are selected for <strong>${notif.jobTitle}</strong></p>`;
+
+                    // Provider contact as a button
+                    const contactHtml = notif.providerEmail ? `
+                        <div class="mt-4">
+                            <a href="mailto:${notif.providerEmail}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition">
+                                📧 Contact Provider
+                            </a>
+                            <span class="ml-3 text-xs text-gray-600">Email: ${notif.providerEmail}</span>
+                        </div>
+                    ` : '';
+
+                    listItem.innerHTML = `
+                        <svg class="w-8 h-8 text-green-600 mt-1 mr-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div class="flex-1">
+                            ${messageHtml}
+                            ${contactHtml}
+                            <span class="text-xs text-gray-500 mt-2 block">${new Date(notif.updatedAt).toLocaleDateString()}</span>
+                        </div>
+                    `;
+                    notificationsList.appendChild(listItem);
+                });
+                
+                notifCountSpan.textContent = approvedNotifs.length;
+            } catch (error) {
+                console.error("Student notification error:", error);
+                notificationsList.innerHTML = '<p class="text-red-500">Error fetching notifications.</p>';
+                notifCountSpan.textContent = 'ERR';
+            }
+        }
+
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+             if (!activeSession.user._id) {
+                 console.warn("No active session found. Mocking session.");
+                 // window.location.href = 'form.html'; 
+            }
+
+            // Toggle menu logic
+            menuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+
+            // Ensure the dashboard is active on load
+            const dashboardSection = document.getElementById('dashboard-content');
+            if (dashboardSection) {
+                dashboardSection.classList.add('active');
+            }
+            // Render user widget, load saved profile, and fetch notifications on load for the count
+            renderSidebarUser();
+            loadSavedProfile();
+            // Hook up profile save handler to compute completeness
+            const profileForm = document.getElementById('profile-form');
+            if (profileForm) profileForm.addEventListener('submit', handleProfileSave);
+            fetchStudentNotifications();
+            // Poll for new student notifications every 15s so approvals appear promptly
+            setInterval(fetchStudentNotifications, 15000);
+
+            // --- Real-time notifications (SSE) ---
+            (function initSse() {
+                // Only attempt SSE if we have a logged-in user and browser supports EventSource
+                if (!activeSession || !activeSession.user || !activeSession.user._id) return;
+                if (!('EventSource' in window)) {
+                    console.warn('SSE not supported by this browser; falling back to polling.');
+                    return;
+                }
+
+                const sseUrl = `${BASE_API_URL}/subscribe?userId=${encodeURIComponent(activeSession.user._id)}`;
+                try {
+                    const es = new EventSource(sseUrl);
+                    es.addEventListener('open', () => console.log('SSE connected:', sseUrl));
+
+                    // Generic message handler: refresh the notifications list when any event arrives
+                    es.addEventListener('message', (e) => {
+                        console.log('SSE message received:', e.data);
+                        try { fetchStudentNotifications(); } catch (err) { console.warn('Failed to refresh after SSE', err); }
+                    });
+
+                    // Some servers may send a custom event name like 'notification'
+                    es.addEventListener('notification', (e) => {
+                        console.log('SSE notification event:', e.data);
+                        try { fetchStudentNotifications(); } catch (err) { console.warn('Failed to refresh after SSE notification', err); }
+                    });
+
+                    es.addEventListener('error', (err) => {
+                        console.warn('SSE error, closing connection', err);
+                        try { es.close(); } catch (e) { /* ignore */ }
+                    });
+                } catch (err) {
+                    console.warn('Failed to initialize SSE:', err);
+                }
+            })();
+
+            // --- Chat widget initialization ---
+            (function(){
+                const chatToggle = document.getElementById('chat-toggle');
+                const chatPanel = document.getElementById('chat-panel');
+                const chatSend = document.getElementById('chat-send');
+                const chatInput = document.getElementById('chat-input');
+                const chatMessages = document.getElementById('chat-messages');
+
+                if (!chatToggle) return;
+
+                function appendChatMessage(text, from = 'bot') {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = from === 'user' ? 'text-right' : 'text-left';
+                    wrapper.innerHTML = `<div class="inline-block p-2 rounded-lg ${from === 'user' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-800'}">${text}</div>`;
+                    chatMessages.appendChild(wrapper);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+
+                chatToggle.addEventListener('click', () => {
+                    if (!chatPanel) return;
+                    chatPanel.classList.toggle('hidden');
+                    if (!chatPanel.classList.contains('hidden')) chatInput.focus();
+                });
+
+                async function sendChat() {
+                    const msg = chatInput.value && chatInput.value.trim();
+                    if (!msg) return;
+                    appendChatMessage(msg, 'user');
+                    chatInput.value = '';
+                    try {
+                        const res = await callApi('chat', { message: msg });
+                        let reply = '';
+                        if (!res) reply = 'No response from server';
+                        else if (res.data && typeof res.data === 'string') reply = res.data;
+                        else if (res.data && res.data.reply) reply = res.data.reply;
+                        else reply = JSON.stringify(res.data);
+                        appendChatMessage(reply, 'bot');
+                    } catch (err) {
+                        appendChatMessage('Error: ' + (err.message || 'Failed to get reply'), 'bot');
+                    }
+                }
+
+                chatSend.addEventListener('click', sendChat);
+                chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendChat(); });
+            })();
+        });
+
+        // Compute profile completeness and persist to activeSession/localStorage
+        function computeProfileCompleteness() {
+            // list of required field ids
+            const required = ['full-name','contact-email','university','degree','grad-year','skills'];
+            let filled = 0;
+            required.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.value && String(el.value).trim() !== '') filled++;
+            });
+            const percent = Math.round((filled / required.length) * 100);
+            return { percent, filled, total: required.length };
+        }
+
+        async function handleProfileSave(e) {
+            e.preventDefault();
+            const btn = document.getElementById('save-profile-btn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+
+            const result = computeProfileCompleteness();
+            if (result.percent < 100) {
+                showMessage('Profile Incomplete', `Your profile is ${result.percent}% complete. Please fill all required fields to reach 100%.`);
+                if (btn) { btn.disabled = false; btn.textContent = 'Save Profile'; }
+                return;
+            }
+
+            // Collect profile data
+            const profileData = {
+                userId: activeSession.user._id,
+                fullName: document.getElementById('full-name').value,
+                contactEmail: document.getElementById('contact-email').value,
+                university: document.getElementById('university').value,
+                degree: document.getElementById('degree').value,
+                gradYear: parseInt(document.getElementById('grad-year').value) || null,
+                gpa: document.getElementById('gpa').value,
+                workExperience: document.getElementById('work-experience').value,
+                skills: document.getElementById('skills').value,
+                projects: document.getElementById('projects').value,
+                completeness: result.percent
+            };
+
+            try {
+                const apiResponse = await callApi('save-profile', profileData);
+                if (apiResponse.success) {
+                    // mark profile complete in session and persist
+                    if (!activeSession.user) activeSession.user = {};
+                    activeSession.user.profileComplete = true;
+                    activeSession.user.profileData = profileData;
+                    try { localStorage.setItem('activeSession', JSON.stringify(activeSession)); } catch (e) { console.warn('Could not persist session', e); }
+
+                    showMessage('Profile Saved', 'Your profile is 100% complete. You can now apply to jobs.');
+                } else {
+                    showMessage('Error', apiResponse.message || 'Failed to save profile');
+                }
+            } catch (error) {
+                showMessage('System Error', error.message || 'Failed to save profile to server');
+            }
+
+            if (btn) { btn.disabled = false; btn.textContent = 'Save Profile'; }
+        }
+
+        // Load saved profile data when page opens (for returning users)
+        async function loadSavedProfile() {
+            if (!activeSession.user || !activeSession.user._id) return;
+
+            try {
+                const apiResponse = await callApi('get-profile', { userId: activeSession.user._id });
+                if (apiResponse.success && apiResponse.profile) {
+                    const profile = apiResponse.profile;
+                    // Populate form fields with saved data
+                    if (profile.fullName) document.getElementById('full-name').value = profile.fullName;
+                    if (profile.contactEmail) document.getElementById('contact-email').value = profile.contactEmail;
+                    if (profile.university) document.getElementById('university').value = profile.university;
+                    if (profile.degree) document.getElementById('degree').value = profile.degree;
+                    if (profile.gradYear) document.getElementById('grad-year').value = profile.gradYear;
+                    if (profile.gpa) document.getElementById('gpa').value = profile.gpa;
+                    if (profile.workExperience) document.getElementById('work-experience').value = profile.workExperience;
+                    if (profile.skills) document.getElementById('skills').value = profile.skills;
+                    if (profile.projects) document.getElementById('projects').value = profile.projects;
+
+                    // Mark as complete if profile completenescd "C:\Users\divya\Downloads\iisf(6)\IISF (3)\IISF"
+
+                    if (profile.completeness >= 100) {
+                        activeSession.user.profileComplete = true;
+                        try { localStorage.setItem('activeSession', JSON.stringify(activeSession)); } catch (e) { /* ignore */ }
+                    }
+                    console.log('Profile loaded. Completeness:', profile.completeness + '%');
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+    </script>
+
+</body>
+</html>

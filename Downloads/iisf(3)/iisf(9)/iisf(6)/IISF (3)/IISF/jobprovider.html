@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Provider Portal - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font and basic styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Lighter background */
+        }
+        .sidebar {
+            min-width: 250px;
+        }
+        .nav-item.active {
+            background-color: #4f46e5; /* Indigo 600 */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        /* Style for smooth transition on content change */
+        .content-section {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .content-section.active {
+            opacity: 1;
+        }
+        .notification-item {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md lg:hidden">
+        <div class="p-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-800">Job Provider Hub</h1>
+            <button id="menu-btn" class="text-indigo-600 hover:text-indigo-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="flex flex-1">
+        
+        <nav id="sidebar" class="sidebar bg-gray-900 text-white p-6 space-y-4 shadow-xl fixed inset-y-0 left-0 transform -translate-x-full lg:relative lg:translate-x-0 transition-transform duration-300 z-30 w-64">
+            
+            <div class="text-3xl font-extrabold mb-8 text-indigo-400">
+                RecruitPro
+            </div>
+            
+            <ul class="space-y-3">
+                <li>
+                    <a href="#" data-section="dashboard" class="nav-item flex items-center p-3 rounded-lg hover:bg-gray-700 transition duration-150 active" onclick="showSection(event, 'dashboard')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-section="add-job" class="nav-item flex items-center p-3 rounded-lg hover:bg-gray-700 transition duration-150" onclick="showSection(event, 'add-job')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Add Job
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-section="notifications" class="nav-item flex items-center p-3 rounded-lg hover:bg-gray-700 transition duration-150" onclick="showSection(event, 'notifications')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-2.81A5.002 5.002 0 0017 9V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4a5.002 5.002 0 003.405 4.19L9 17h5a2 2 0 002-2v-4a5.002 5.002 0 00-3.405-4.19zM12 17a2 2 0 01-2 2h4a2 2 0 01-2-2z"></path></svg>
+                        Notifications
+                        <span id="notif-count" class="ml-auto inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">0</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="#" data-section="approved-applications" class="nav-item flex items-center p-3 rounded-lg hover:bg-gray-700 transition duration-150" onclick="showSection(event, 'approved-applications')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Approved Applications
+                        <span id="approved-count" class="ml-auto inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-green-100 bg-green-600 rounded-full">0</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-section="manage-jobs" class="nav-item flex items-center p-3 rounded-lg hover:bg-gray-700 transition duration-150" onclick="showSection(event, 'manage-jobs')">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10m-4 0h14a2 2 0 002-2V9a2 2 0 00-2-2H4"></path></svg>
+                        Manage Jobs
+                    </a>
+                </li>
+            </ul>
+
+            <div class="pt-10 border-t border-gray-700">
+                 <button onclick="logout()" class="w-full flex items-center p-3 rounded-lg bg-red-600 hover:bg-red-700 transition duration-150">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    Logout
+                </button>
+                <!-- Sidebar user info (populated when authenticated) -->
+                <div id="sidebar-user" class="mt-4 hidden items-center space-x-3">
+                    <div id="user-avatar" class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold"></div>
+                    <div>
+                        <p id="sidebar-username" class="text-sm font-semibold">Guest</p>
+                        <p id="sidebar-email" class="text-xs text-gray-300">not signed in</p>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <main class="flex-1 p-6 lg:p-10 transition-all duration-300">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-6">Job Provider Portal</h2>
+
+            <section id="dashboard-content" class="content-section active bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-3xl font-semibold text-gray-800 mb-4 border-b pb-2">Overview Dashboard</h3>
+                <p class="text-gray-600 mb-6">A quick look at your active job postings and candidate metrics.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-indigo-50 p-6 rounded-lg shadow-md">
+                        <p class="text-sm font-medium text-indigo-600">Active Postings</p>
+                        <p class="text-4xl font-bold text-indigo-800 mt-1">12</p>
+                        <p class="text-sm text-gray-500 mt-2">Currently seeking candidates</p>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-lg shadow-md">
+                        <p class="text-sm font-medium text-green-600">Total Applicants</p>
+                        <p id="total-applicants" class="text-4xl font-bold text-green-800 mt-1">285</p>
+                        <p class="text-sm text-gray-500 mt-2">New applicants this week: 45</p>
+                    </div>
+                    <div class="bg-yellow-50 p-6 rounded-lg shadow-md">
+                        <p class="text-sm font-medium text-yellow-600">Interviews Scheduled</p>
+                        <p class="text-4xl font-bold text-yellow-800 mt-1">7</p>
+                        <p class="text-sm text-gray-500 mt-2">Next interview tomorrow at 10:00 AM</p>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h4 class="text-2xl font-semibold text-gray-800 mb-3">Recent Activity</h4>
+                    <ul class="space-y-3" id="recent-activity-list">
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-indigo-500">New Applicant for 'Senior Developer'</li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-indigo-500">Posted 'Marketing Manager' job today</li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-indigo-500">Interview confirmed with John S.</li>
+                    </ul>
+                </div>
+
+            </section>
+
+            <section id="add-job-content" class="content-section hidden bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-3xl font-semibold text-gray-800 mb-4 border-b pb-2">Add New Job Posting</h3>
+                <p class="text-gray-600 mb-6">Fill out the details below to create a new job listing for candidates. <span class="font-bold text-red-500">NOTE: All jobs require admin approval before being shown to students.</span></p>
+                
+                <form id="post-job-form" class="space-y-6">
+                    <div>
+                        <label for="job-title" class="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+                        <input type="text" id="job-title" name="title" required placeholder="e.g., Lead Full Stack Developer" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label for="job-location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                        <input type="text" id="job-location" name="location" required placeholder="e.g., Remote or San Francisco, CA" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label for="job-description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea id="job-description" name="description" required rows="5" placeholder="Detailed job responsibilities and requirements..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"></textarea>
+                    </div>
+                    <button type="submit" id="post-job-btn" class="w-full md:w-auto flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150">
+                        Post Job
+                    </button>
+                </form>
+            </section>
+
+            <section id="notifications-content" class="content-section hidden bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-3xl font-semibold text-gray-800 mb-4 border-b pb-2">New Applicant Notifications</h3>
+                <p class="text-gray-600 mb-6">Review and manage pending applications from students. Approve to move to your Approved Applications folder or reject if not interested.</p>
+
+                <button onclick="fetchProviderNotifications()" class="mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    🔄 Refresh Notifications
+                </button>
+
+                <div class="space-y-4" id="notifications-list">
+                    <p class="text-gray-500" id="no-notifications-msg">No new application notifications.</p>
+                </div>
+            </section>
+
+            <section id="approved-applications-content" class="content-section hidden bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-3xl font-semibold text-gray-800 mb-4 border-b pb-2">Approved Applications</h3>
+                <p class="text-gray-600 mb-6">Applications you have approved. These candidates are ready for the next steps in your hiring process.</p>
+
+                <button onclick="fetchApprovedApplications()" class="mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    🔄 Refresh Approved List
+                </button>
+
+                <div class="space-y-4" id="approved-applications-list">
+                    <p class="text-gray-500" id="no-approved-msg">No approved applications yet.</p>
+                </div>
+            </section>
+
+            <section id="manage-jobs-content" class="content-section hidden bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-3xl font-semibold text-gray-800 mb-4 border-b pb-2">Manage Posted Jobs (Admin Simulation)</h3>
+                <p class="text-gray-600 mb-6">View job details and approve/reject job postings.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Left Column: Job Lookup Form -->
+                    <div class="space-y-4 p-4 bg-yellow-50 rounded-lg">
+                        <p class="font-bold text-yellow-800">Admin Action Simulation</p>
+                        <div>
+                            <label for="approval-job-id" class="block text-sm font-medium text-gray-700 mb-1">Job ID to Review/Approve/Reject</label>
+                            <input type="text" id="approval-job-id" required placeholder="Paste Job ID here" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div class="flex space-x-4">
+                            <button type="button" onclick="viewJobDetails()" 
+                                    class="flex-1 py-3 px-4 rounded-lg text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 transition duration-150">
+                                View Job Details
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Job Details Display -->
+                    <div id="job-details-container" class="hidden p-4 bg-gray-50 rounded-lg">
+                        <h4 class="text-xl font-bold text-gray-800 mb-3">Job Details</h4>
+                        <div id="job-details-content" class="space-y-3">
+                            <!-- Job details will be populated here -->
+                        </div>
+                        <div class="flex space-x-4 mt-4">
+                            <button type="button" onclick="handleJobApproval(true)" 
+                                    class="flex-1 py-3 px-4 rounded-lg text-lg font-medium text-white bg-green-600 hover:bg-green-700 transition duration-150">
+                                Approve Job
+                            </button>
+                            <button type="button" onclick="handleJobApproval(false)" 
+                                    class="flex-1 py-3 px-4 rounded-lg text-lg font-medium text-white bg-red-600 hover:bg-red-700 transition duration-150">
+                                Reject/Unapprove Job
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h4 class="text-2xl font-semibold text-gray-800 mb-3">Your Posted Jobs</h4>
+                    <p class="text-gray-500 mb-4">All jobs posted by you (copy Job IDs from here to review details).</p>
+                    <ul class="space-y-3" id="provider-jobs-list">
+                        <li class="text-gray-500">Loading jobs...</li>
+                    </ul>
+                </div>
+            </section>
+
+
+        <div id="message-box" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full">
+                <h3 id="message-title" class="text-xl font-bold mb-3 text-gray-800"></h3>
+                <p id="message-content" class="text-gray-600 mb-4"></p>
+                <button onclick="hideMessage()" class="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-150">
+                    Close
+                </button>
+            </div>
+        </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- API CONFIGURATION ---
+        let BASE_API_URL = '/api';
+        try {
+            const origin = window.location.origin;
+            // Check if served from a non-backend origin (like Live Server)
+            if (!origin.includes(':8080') && !origin.includes('localhost:8080')) {
+                BASE_API_URL = 'http://localhost:8080/api';
+            }
+        } catch (e) {
+            BASE_API_URL = 'http://localhost:8080/api';
+        }
+
+        // --- GLOBAL STATE & ELEMENTS ---
+        const sidebar = document.getElementById('sidebar');
+        const menuBtn = document.getElementById('menu-btn');
+        const notifCountSpan = document.getElementById('notif-count');
+        const notificationsList = document.getElementById('notifications-list');
+        const providerJobsList = document.getElementById('provider-jobs-list');
+        
+        // Session management: try to read persisted session else use empty
+        let activeSession = { user: { _id: null, username: null, email: null, role: null }, token: null };
+        try {
+            const stored = localStorage.getItem('activeSession');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (parsed && parsed.user) activeSession = parsed;
+            }
+        } catch (e) {
+            console.warn('Failed to read persisted session', e);
+        }
+
+        // Debug: Log session info
+        console.log('Initial session loaded:', {
+            userId: activeSession.user?._id,
+            username: activeSession.user?.username,
+            email: activeSession.user?.email,
+            hasToken: !!activeSession.token
+        });
+
+        // If user is not logged in, redirect to login
+        if (!activeSession.user || !activeSession.user._id) {
+            console.warn('No active session found. Redirecting to login...');
+            window.location.href = 'form.html';
+        }
+
+        function renderSidebarUser() {
+            const container = document.getElementById('sidebar-user');
+            if (!container) return;
+            if (activeSession && activeSession.user && activeSession.user._id) {
+                const avatar = document.getElementById('user-avatar');
+                const nameEl = document.getElementById('sidebar-username');
+                const emailEl = document.getElementById('sidebar-email');
+
+                const nameSource = activeSession.user.username || activeSession.user.email || 'U';
+                const initials = nameSource.split(/\s+/).map(s => s[0]).slice(0,2).join('').toUpperCase();
+                if (avatar) avatar.textContent = initials;
+                if (nameEl) nameEl.textContent = activeSession.user.username || activeSession.user.email || 'User';
+                if (emailEl) emailEl.textContent = activeSession.user.email || '';
+
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        // --- ENHANCED JOB MANAGEMENT VARIABLES ---
+        let currentJobId = null;
+
+        // --- UI & UTILITY FUNCTIONS ---
+        function showMessage(title, content) {
+            document.getElementById('message-title').textContent = title;
+            document.getElementById('message-content').textContent = content;
+            document.getElementById('message-box').classList.remove('hidden');
+            document.getElementById('message-box').classList.add('flex');
+        }
+
+        function hideMessage() {
+            document.getElementById('message-box').classList.add('hidden');
+            document.getElementById('message-box').classList.remove('flex');
+        }
+
+        function logout() {
+            // Clear session data and redirect to a safe place
+            activeSession = { user: { _id: null, username: null } };
+                try { localStorage.removeItem('activeSession'); } catch (e) { /* ignore */ }
+                window.location.href = 'form.html'; 
+        }
+
+        function showSection(event, sectionId) {
+            event.preventDefault();
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('active'); 
+            });
+
+            const activeSection = document.getElementById(`${sectionId}-content`);
+            if (activeSection) {
+                activeSection.classList.remove('hidden');
+                setTimeout(() => { activeSection.classList.add('active'); }, 10);
+            }
+
+            if (sectionId === 'notifications') {
+                fetchProviderNotifications();
+            } else if (sectionId === 'manage-jobs') {
+                 fetchProviderJobs();
+            }
+
+            if (window.innerWidth < 1024) {
+                sidebar.classList.add('-translate-x-full');
+            }
+        }
+
+        // --- API CALL UTILITY ---
+        async function callApi(endpoint, body) {
+            try {
+                const res = await fetch(`${BASE_API_URL}/${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                    mode: 'cors'
+                });
+
+                const text = await res.text();
+                let data = null;
+                try { data = text ? JSON.parse(text) : null; } catch (e) { data = text; }
+
+                if (!res.ok) {
+                    const errMsg = (data && data.message) ? data.message : `HTTP ${res.status}`;
+                    throw new Error(errMsg);
+                }
+                return data;
+            } catch (err) {
+                console.error('API call error:', err);
+                throw err;
+            }
+        }
+
+        // --- NEW JOB POSTING LOGIC ---
+        document.getElementById('post-job-form').addEventListener('submit', handlePostJob);
+
+        async function handlePostJob(event) {
+            event.preventDefault();
+            const form = event.target;
+            const submitButton = document.getElementById('post-job-btn');
+
+            const jobData = {
+                providerId: activeSession.user._id,
+                providerEmail: activeSession.user.email,
+                title: form.title.value,
+                location: form.location.value,
+                description: form.description.value,
+            };
+
+            submitButton.disabled = true;
+            submitButton.textContent = 'Posting...';
+
+            try {
+                const apiResponse = await callApi('post-job', jobData);
+
+                if (apiResponse.success) {
+                    showMessage("Job Posted", "Your job has been posted successfully and is awaiting admin approval.");
+                    form.reset();
+                } else {
+                    showMessage("Post Failed", apiResponse.message || "Could not post job.");
+                }
+            } catch (error) {
+                showMessage("System Error", "Could not communicate with the server. See console for details.");
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Post Job';
+            }
+        }
+
+        // --- PROVIDER NOTIFICATION LOGIC ---
+        async function fetchProviderNotifications() {
+            console.log('Fetching notifications for provider:', activeSession.user._id);
+            
+            if (!activeSession.user || !activeSession.user._id) {
+                console.error('No provider ID available');
+                if (notificationsList) {
+                    notificationsList.innerHTML = '<p class="text-red-500">Error: You must be logged in to view notifications.</p>';
+                }
+                return;
+            }
+            
+            try {
+                const apiResponse = await callApi('provider-notifications', { providerId: activeSession.user._id });
+                console.log('Notifications API response:', apiResponse);
+                
+                if (!notificationsList) {
+                    console.error('notificationsList element not found!');
+                    return;
+                }
+                
+                notificationsList.innerHTML = '';
+                if (!apiResponse.notifications || apiResponse.notifications.length === 0) {
+                    notificationsList.innerHTML = '<p class="text-gray-500">No new application notifications.</p>';
+                    notifCountSpan.textContent = '0';
+                    console.log('No notifications to display');
+                    return;
+                }
+
+                console.log('Displaying', apiResponse.notifications.length, 'notifications');
+                apiResponse.notifications.forEach((notif, index) => {
+                    const dropdownId = `dropdown-${index}`;
+                    const listItem = document.createElement('div');
+                    listItem.className = 'flex items-start justify-between p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-lg shadow-sm notification-item';
+                    
+                    // Build profile details HTML if profile exists
+                    let profileHTML = '';
+                    if (notif.studentProfile) {
+                        const profile = notif.studentProfile;
+                        profileHTML = `
+                            <div class="border-t border-gray-300 mt-3 pt-3">
+                                <p class="font-semibold text-gray-800 mb-2">Student Profile:</p>
+                                <div class="text-xs text-gray-700 space-y-1">
+                                    <p><strong>Full Name:</strong> ${profile.fullName || 'N/A'}</p>
+                                    <p><strong>Contact Email:</strong> ${profile.contactEmail || 'N/A'}</p>
+                                    <p><strong>University:</strong> ${profile.university || 'N/A'}</p>
+                                    <p><strong>Degree:</strong> ${profile.degree || 'N/A'}</p>
+                                    <p><strong>Graduation Year:</strong> ${profile.gradYear || 'N/A'}</p>
+                                    <p><strong>GPA:</strong> ${profile.gpa || 'N/A'}</p>
+                                    <p><strong>Work Experience:</strong> ${profile.workExperience || 'N/A'}</p>
+                                    <p><strong>Skills:</strong> ${profile.skills || 'N/A'}</p>
+                                    <p><strong>Projects:</strong> ${profile.projects || 'N/A'}</p>
+                                    <p><strong>Profile Completeness:</strong> ${profile.completeness || 0}%</p>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        profileHTML = `
+                            <div class="border-t border-gray-300 mt-3 pt-3">
+                                <p class="text-xs text-gray-500 italic">No profile information available</p>
+                            </div>
+                        `;
+                    }
+                    
+                    listItem.innerHTML = `
+                        <div class="flex items-start flex-1">
+                            <svg class="w-6 h-6 text-indigo-600 mt-1 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                            <div>
+                                <p class="font-semibold text-gray-900">New Applicant for '${notif.jobTitle}'</p>
+                                <p class="text-sm text-gray-600"><strong>Student ID:</strong> ${notif.applicantId || 'N/A'}</p>
+                                <p class="text-sm text-gray-600"><strong>Username:</strong> ${notif.applicantUsername}</p>
+                                <p class="text-sm text-gray-600"><strong>Email:</strong> ${notif.applicantEmail}</p>
+                                <span class="text-xs text-indigo-500 mt-1 block">${new Date(notif.appliedAt).toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="relative ml-4">
+                            <button onclick="toggleDropdown('${dropdownId}')" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 transition">
+                                ▼ Details
+                            </button>
+                            <div id="${dropdownId}" class="hidden absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+                                <div class="p-3 border-b border-gray-200 sticky top-0 bg-white">
+                                    <p class="font-semibold text-gray-800">${notif.applicantUsername}</p>
+                                    <p class="text-xs text-gray-500">${notif.applicantEmail}</p>
+                                </div>
+                                <div class="p-3 text-sm text-gray-700 space-y-2">
+                                    <p><strong>Student ID:</strong> ${notif.applicantId || 'N/A'}</p>
+                                    <p><strong>Applied for:</strong> ${notif.jobTitle}</p>
+                                    <p><strong>Applied on:</strong> ${new Date(notif.appliedAt).toLocaleDateString()}</p>
+                                    ${profileHTML}
+                                </div>
+                                <div class="p-3 border-t border-gray-200">
+                                    <div class="space-y-2">
+                                        <button onclick="approveApplication('${notif.applicationId}', '${dropdownId}')" class="w-full px-3 py-2 bg-green-600 text-white text-sm font-medium rounded hover:bg-green-700 transition">
+                                            ✅ Approve Application
+                                        </button>
+                                        <button onclick="rejectApplication('${notif.applicationId}', '${dropdownId}')" class="w-full px-3 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 transition">
+                                            ❌ Reject Application
+                                        </button>
+                                        <button onclick="contactApplicant('${notif.applicantEmail}')" class="w-full px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition">
+                                            📧 Contact Applicant
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    notificationsList.appendChild(listItem);
+                });
+                
+                notifCountSpan.textContent = apiResponse.notifications.length;
+                // Update dashboard recent activity
+                updateDashboardActivity(apiResponse.notifications);
+
+            } catch (error) {
+                console.error("Notification fetch error:", error);
+                if (notificationsList) {
+                    notificationsList.innerHTML = '<p class="text-red-500">Error fetching notifications: ' + error.message + '</p>';
+                }
+                notifCountSpan.textContent = 'ERR';
+            }
+        }
+
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+        }
+
+        function contactApplicant(email) {
+            // Open email client or show contact info
+            showMessage('Contact Applicant', `Contact the applicant at: ${email}`);
+        }
+
+        async function approveApplication(applicationId, dropdownId) {
+            if (!applicationId) return showMessage('Error', 'Missing application id');
+            try {
+                // Disable the approve button while processing
+                const dropdown = document.getElementById(dropdownId);
+                const approveBtn = dropdown ? dropdown.querySelector('button[onclick^="approveApplication"]') : null;
+                if (approveBtn) { approveBtn.disabled = true; approveBtn.textContent = 'Approving...'; }
+
+                const apiResponse = await callApi('approve-application', { applicationId, providerId: activeSession.user._id });
+                if (apiResponse.success) {
+                    showMessage('Application Approved', apiResponse.message || 'Application approved successfully');
+                    // Remove the notification item from the list (or mark as approved)
+                    const item = approveBtn ? approveBtn.closest('.notification-item') : null;
+                    if (item) {
+                        item.classList.add('opacity-60');
+                        // fade out then remove
+                        setTimeout(() => item.remove(), 400);
+                    }
+                    // Refresh both lists
+                    setTimeout(() => {
+                        fetchProviderNotifications();
+                        fetchApprovedApplications();
+                    }, 500);
+                } else {
+                    showMessage('Approve Failed', apiResponse.message || 'Could not approve application');
+                    if (approveBtn) { approveBtn.disabled = false; approveBtn.textContent = '✅ Approve Application'; }
+                }
+            } catch (err) {
+                console.error('Approve error:', err);
+                showMessage('System Error', 'Failed to approve application.');
+            }
+        }
+
+        async function rejectApplication(applicationId, dropdownId) {
+            if (!applicationId) return showMessage('Error', 'Missing application id');
+            try {
+                // Disable the reject button while processing
+                const dropdown = document.getElementById(dropdownId);
+                const rejectBtn = dropdown ? dropdown.querySelector('button[onclick^="rejectApplication"]') : null;
+                if (rejectBtn) { rejectBtn.disabled = true; rejectBtn.textContent = 'Rejecting...'; }
+
+                const apiResponse = await callApi('reject-application', { applicationId, providerId: activeSession.user._id });
+                if (apiResponse.success) {
+                    showMessage('Application Rejected', apiResponse.message || 'Application rejected successfully');
+                    // Remove the notification item from the list
+                    const item = rejectBtn ? rejectBtn.closest('.notification-item') : null;
+                    if (item) {
+                        item.classList.add('opacity-60');
+                        // fade out then remove
+                        setTimeout(() => item.remove(), 400);
+                    }
+                    // Refresh notifications list
+                    setTimeout(() => fetchProviderNotifications(), 500);
+                } else {
+                    showMessage('Reject Failed', apiResponse.message || 'Could not reject application');
+                    if (rejectBtn) { rejectBtn.disabled = false; rejectBtn.textContent = '❌ Reject Application'; }
+                }
+            } catch (err) {
+                console.error('Reject error:', err);
+                showMessage('System Error', 'Failed to reject application.');
+            }
+        }
+
+        function updateDashboardActivity(newApplications) {
+            const recentActivityList = document.getElementById('recent-activity-list');
+            // Keep only the first 2 existing items, then prepend new notifications
+            const existingActivities = Array.from(recentActivityList.children).slice(0, 2);
+            recentActivityList.innerHTML = '';
+            
+            newApplications.slice(0, 3).forEach(notif => {
+                const li = document.createElement('li');
+                li.className = 'p-4 bg-gray-50 rounded-lg border-l-4 border-indigo-500';
+                li.textContent = `New Applicant for '${notif.jobTitle}'`;
+                recentActivityList.appendChild(li);
+            });
+
+            // Add back the original activities if we have space
+            existingActivities.forEach(li => recentActivityList.appendChild(li));
+
+            // Update applicant count stat (simple mock for now)
+            const currentApplicants = parseInt(document.getElementById('total-applicants').textContent);
+            document.getElementById('total-applicants').textContent = currentApplicants + newApplications.length;
+        }
+
+        async function fetchApprovedApplications() {
+            console.log('Fetching approved applications for provider:', activeSession.user._id);
+            
+            if (!activeSession.user || !activeSession.user._id) {
+                console.error('No provider ID available');
+                const approvedList = document.getElementById('approved-applications-list');
+                if (approvedList) {
+                    approvedList.innerHTML = '<p class="text-red-500">Error: You must be logged in to view approved applications.</p>';
+                }
+                return;
+            }
+            
+            try {
+                // Call the provider-notifications endpoint to get all applications, then filter for approved ones
+                const apiResponse = await callApi('provider-notifications', { providerId: activeSession.user._id });
+                console.log('Approved applications fetch:', apiResponse);
+                
+                const approvedList = document.getElementById('approved-applications-list');
+                const approvedCount = document.getElementById('approved-count');
+                if (!approvedList) {
+                    console.error('approved-applications-list element not found!');
+                    return;
+                }
+                
+                // Filter for 'Approved' status applications (we need a separate endpoint for this)
+                // For now, we'll call the student-notifications endpoint indirectly by querying approved apps
+                // Actually, we should add a dedicated endpoint or query parameter
+                
+                try {
+                    // Try calling a new endpoint that returns only approved applications for the provider
+                    const res = await fetch(`${BASE_API_URL}/provider-approved-applications`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ providerId: activeSession.user._id })
+                    });
+                    
+                    if (!res.ok) throw new Error('Failed to fetch approved applications');
+                    
+                    const data = await res.json();
+                    const approvedApps = data.applications || [];
+                    
+                    approvedList.innerHTML = '';
+                    if (approvedApps.length === 0) {
+                        approvedList.innerHTML = '<p class="text-gray-500">No approved applications yet.</p>';
+                        approvedCount.textContent = '0';
+                        return;
+                    }
+
+                    approvedApps.forEach((app, index) => {
+                        const listItem = document.createElement('div');
+                        listItem.className = 'flex items-start justify-between p-4 bg-green-50 border-l-4 border-green-500 rounded-lg shadow-sm';
+                        
+                        listItem.innerHTML = `
+                            <div class="flex items-start flex-1">
+                                <svg class="w-6 h-6 text-green-600 mt-1 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <div>
+                                    <p class="font-semibold text-gray-900">✅ Approved for '${app.jobTitle || 'Unknown Job'}'</p>
+                                    <p class="text-sm text-gray-600"><strong>Applicant:</strong> ${app.applicantUsername || app.applicantName || 'Unknown'}</p>
+                                    <p class="text-sm text-gray-600"><strong>Email:</strong> ${app.applicantEmail || 'N/A'}</p>
+                                    <p class="text-sm text-gray-600"><strong>Approved on:</strong> ${new Date(app.approvedAt || app.updatedAt).toLocaleDateString()}</p>
+                                    <a href="mailto:${app.applicantEmail}" class="text-sm text-green-600 hover:text-green-800 mt-2 inline-block">📧 Send Email</a>
+                                </div>
+                            </div>
+                        `;
+                        approvedList.appendChild(listItem);
+                    });
+                    
+                    approvedCount.textContent = approvedApps.length;
+                    
+                } catch (innerErr) {
+                    console.log('Approved applications endpoint not yet available or failed, showing empty list');
+                    approvedList.innerHTML = '<p class="text-gray-500">No approved applications yet.</p>';
+                    approvedCount.textContent = '0';
+                }
+
+            } catch (error) {
+                console.error("Approved applications fetch error:", error);
+                const approvedList = document.getElementById('approved-applications-list');
+                if (approvedList) {
+                    approvedList.innerHTML = '<p class="text-red-500">Error fetching approved applications: ' + error.message + '</p>';
+                }
+                const approvedCount = document.getElementById('approved-count');
+                if (approvedCount) approvedCount.textContent = 'ERR';
+            }
+        }        // --- ENHANCED JOB MANAGEMENT FUNCTIONS ---
+
+        // Function to view job details before approval
+        async function viewJobDetails() {
+            const jobIdInput = document.getElementById('approval-job-id');
+            const jobId = jobIdInput.value.trim();
+            
+            if (!jobId) {
+                showMessage("Input Error", "Please enter a Job ID.");
+                return;
+            }
+
+            try {
+                const apiResponse = await callApi('approve-job', { jobId });
+                // Note: We're sending jobId without approvalStatus to just get details
+
+                if (apiResponse.success) {
+                    currentJobId = jobId;
+                    displayJobDetails(apiResponse.job);
+                    showMessage("Job Found", "Job details loaded successfully. Review and take action.");
+                } else {
+                    showMessage("Job Not Found", apiResponse.message || "Could not find the specified job.");
+                }
+            } catch (error) {
+                showMessage("System Error", "Could not fetch job details. See console for details.");
+                console.error("Job details fetch error:", error);
+            }
+        }
+
+        // Function to display job details
+        function displayJobDetails(job) {
+            const container = document.getElementById('job-details-container');
+            const content = document.getElementById('job-details-content');
+            
+            const statusColor = job.approved ? 'text-green-600' : 'text-red-600';
+            const statusText = job.approved ? 'Approved' : 'Pending Approval';
+            
+            content.innerHTML = `
+                <div class="grid grid-cols-1 gap-2">
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-700">Job ID:</span>
+                        <span class="text-gray-900 font-mono">${job._id}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-700">Provider ID:</span>
+                        <span class="text-gray-900">${job.providerId}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-700">Job Title:</span>
+                        <span class="text-gray-900 font-medium">${job.title}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-700">Location:</span>
+                        <span class="text-gray-900">${job.location}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-700">Current Status:</span>
+                        <span class="${statusColor} font-medium">${statusText}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold text-gray-700">Posted Date:</span>
+                        <span class="text-gray-900">${new Date(job.createdAt).toLocaleDateString()}</span>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="font-semibold text-gray-700 block mb-1">Job Description:</span>
+                    <div class="p-3 bg-white border border-gray-300 rounded-lg text-gray-700 max-h-40 overflow-y-auto">
+                        ${job.description}
+                    </div>
+                </div>
+            `;
+            
+            container.classList.remove('hidden');
+        }
+
+        // Modified handleJobApproval to use the current job ID
+        async function handleJobApproval(isApproved) {
+            if (!currentJobId) {
+                showMessage("Error", "Please first view job details using a valid Job ID.");
+                return;
+            }
+
+            try {
+                const apiResponse = await callApi('approve-job', { 
+                    jobId: currentJobId, 
+                    approvalStatus: isApproved 
+                });
+
+                if (apiResponse.success) {
+                    showMessage(isApproved ? "Job Approved" : "Job Rejected", apiResponse.message);
+                    // Clear the form and hide details
+                    document.getElementById('approval-job-id').value = '';
+                    document.getElementById('job-details-container').classList.add('hidden');
+                    currentJobId = null;
+                    fetchProviderJobs(); // Reload the jobs list
+                } else {
+                    showMessage("Action Failed", apiResponse.message || "Could not complete approval action.");
+                }
+            } catch (error) {
+                showMessage("System Error", "Could not communicate with the server to approve/reject job.");
+            }
+        }
+
+        // --- MANAGE JOBS (ADMIN SIMULATION) LOGIC ---
+        async function fetchProviderJobs() {
+            try {
+                // Fetch all jobs, regardless of approval status
+                const apiResponse = await fetch(`${BASE_API_URL}/jobs`, {
+                     method: 'POST', // Using POST for custom endpoint body needs
+                     headers: { 'Content-Type': 'application/json' },
+                     body: JSON.stringify({ providerId: activeSession.user._id }),
+                     mode: 'cors'
+                });
+                const jobData = await apiResponse.json();
+
+                providerJobsList.innerHTML = '';
+                if (jobData.jobs && jobData.jobs.length === 0) {
+                    providerJobsList.innerHTML = '<li class="text-gray-500">No jobs posted yet.</li>';
+                    return;
+                }
+
+                jobData.jobs.forEach(job => {
+                    const statusColor = job.approved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                    const listItem = document.createElement('li');
+                    listItem.className = 'p-4 bg-gray-50 rounded-lg border-l-4 border-gray-400 space-y-2 cursor-pointer hover:bg-gray-100';
+                    listItem.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-800">${job.title} - ${job.location}</p>
+                                <p class="text-xs text-gray-600 break-all">ID: <span class="font-mono">${job._id}</span></p>
+                            </div>
+                            <span class="inline-block px-2 py-0.5 text-xs font-medium rounded-full ${statusColor}">
+                                ${job.approved ? 'Approved' : 'Pending'}
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-700 line-clamp-2">${job.description}</p>
+                        <button onclick="copyJobId('${job._id}')" 
+                                class="text-xs text-blue-600 hover:text-blue-800 mt-1">
+                            📋 Copy Job ID
+                        </button>
+                    `;
+                    providerJobsList.appendChild(listItem);
+                });
+
+            } catch (error) {
+                console.error("Job fetch error:", error);
+                providerJobsList.innerHTML = '<li class="text-red-500">Error fetching your jobs.</li>';
+            }
+        }
+
+        // Helper function to copy job ID to clipboard
+        function copyJobId(jobId) {
+            navigator.clipboard.writeText(jobId).then(() => {
+                // Optional: Show a small toast notification
+                const jobIdInput = document.getElementById('approval-job-id');
+                jobIdInput.value = jobId;
+                showMessage("Copied!", "Job ID copied to clipboard and input field.");
+            }).catch(err => {
+                console.error('Failed to copy job ID:', err);
+            });
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for mock session data (or redirect if not authenticated in a real app)
+            if (!activeSession.user._id) {
+                 // In a real app, you'd check a token in localStorage and redirect to login if absent.
+                 console.warn("No active session found. Mocking session.");
+                 // window.location.href = 'form.html'; 
+            }
+            
+            // Toggle menu logic
+            menuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+
+            // Ensure the dashboard is active on load
+            const dashboardSection = document.getElementById('dashboard-content');
+            if (dashboardSection) {
+                dashboardSection.classList.add('active');
+            }
+            // Render user widget and fetch notifications on load for the count
+            renderSidebarUser();
+            fetchProviderNotifications();
+        });
+    </script>
+
+</body>
+</html>

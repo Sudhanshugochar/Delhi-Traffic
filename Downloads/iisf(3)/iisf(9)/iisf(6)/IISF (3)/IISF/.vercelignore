@@ -1,0 +1,7 @@
+node_modules
+test-*.js
+test-*.ps1
+.env
+.git
+.gitignore
+README.md
