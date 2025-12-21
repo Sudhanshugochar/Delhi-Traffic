@@ -1,0 +1,90 @@
+[
+  {
+    "id": "cert-001",
+    "name": "api.example.com SSL",
+    "domain": "api.example.com",
+    "issuer": "Let's Encrypt",
+    "status": "active",
+    "expiryDate": "2025-12-31",
+    "issuedDate": "2024-12-21",
+    "subject": "CN=api.example.com",
+    "fingerprint": "SHA256:abc123def456"
+  },
+  {
+    "id": "cert-002",
+    "name": "www.example.com SSL",
+    "domain": "www.example.com",
+    "issuer": "DigiCert",
+    "status": "active",
+    "expiryDate": "2026-03-15",
+    "issuedDate": "2024-03-15",
+    "subject": "CN=www.example.com",
+    "fingerprint": "SHA256:xyz789uvw012"
+  },
+  {
+    "id": "cert-003",
+    "name": "mail.example.com SSL",
+    "domain": "mail.example.com",
+    "issuer": "Let's Encrypt",
+    "status": "expiring soon",
+    "expiryDate": "2025-01-15",
+    "issuedDate": "2024-01-15",
+    "subject": "CN=mail.example.com",
+    "fingerprint": "SHA256:pqr456stu789"
+  },
+  {
+    "id": "cert-004",
+    "name": "internal.example.com SSL",
+    "domain": "internal.example.com",
+    "issuer": "Internal CA",
+    "status": "expired",
+    "expiryDate": "2024-06-01",
+    "issuedDate": "2023-06-01",
+    "subject": "CN=internal.example.com",
+    "fingerprint": "SHA256:def789ghi012"
+  },
+  {
+    "id": "cert-005",
+    "name": "cdn.example.com SSL",
+    "domain": "cdn.example.com",
+    "issuer": "GlobalSign",
+    "status": "active",
+    "expiryDate": "2026-09-20",
+    "issuedDate": "2024-09-20",
+    "subject": "CN=cdn.example.com",
+    "fingerprint": "SHA256:jkl123mno456"
+  },
+  {
+    "id": "cert-006",
+    "name": "vpn.example.com SSL",
+    "domain": "vpn.example.com",
+    "issuer": "Let's Encrypt",
+    "status": "active",
+    "expiryDate": "2025-08-10",
+    "issuedDate": "2024-08-10",
+    "subject": "CN=vpn.example.com",
+    "fingerprint": "SHA256:mno456pqr789"
+  },
+  {
+    "id": "cert-007",
+    "name": "db.example.com SSL",
+    "domain": "db.example.com",
+    "issuer": "Sectigo",
+    "status": "active",
+    "expiryDate": "2026-11-05",
+    "issuedDate": "2024-11-05",
+    "subject": "CN=db.example.com",
+    "fingerprint": "SHA256:stu789vwx012"
+  },
+  {
+    "id": "cert-008",
+    "name": "backup.example.com SSL",
+    "domain": "backup.example.com",
+    "issuer": "Let's Encrypt",
+    "status": "expiring soon",
+    "expiryDate": "2025-01-25",
+    "issuedDate": "2024-01-25",
+    "subject": "CN=backup.example.com",
+    "fingerprint": "SHA256:vwx012yza345"
+  }
+]

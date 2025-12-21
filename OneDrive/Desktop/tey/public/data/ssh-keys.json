@@ -1,0 +1,84 @@
+[
+  {
+    "id": "ssh-001",
+    "keyOwner": "john.doe@example.com",
+    "fingerprint": "SHA256:N5hJSHgFd7YQnZf8hKj3L5mNpQ0qR2sT3u4v5w6x",
+    "lastUsed": "2024-12-20T14:30:00Z",
+    "trustLevel": "High",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "algorithm": "ED25519",
+    "keyLength": 256,
+    "servers": [
+      { "name": "prod-api-01", "ip": "192.168.1.10" },
+      { "name": "prod-api-02", "ip": "192.168.1.11" }
+    ]
+  },
+  {
+    "id": "ssh-002",
+    "keyOwner": "jane.smith@example.com",
+    "fingerprint": "SHA256:A7bCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMn",
+    "lastUsed": "2024-12-19T09:15:00Z",
+    "trustLevel": "Medium",
+    "createdAt": "2024-02-20T14:30:00Z",
+    "algorithm": "RSA",
+    "keyLength": 4096,
+    "servers": [
+      { "name": "staging-01", "ip": "192.168.2.20" }
+    ]
+  },
+  {
+    "id": "ssh-003",
+    "keyOwner": "devops-team@example.com",
+    "fingerprint": "SHA256:Xy1Z2aB3cD4eF5gH6iJ7kL8mN9oPqRsT8uV9wXyZ",
+    "lastUsed": "2024-12-21T08:45:00Z",
+    "trustLevel": "High",
+    "createdAt": "2024-03-10T11:20:00Z",
+    "algorithm": "ED25519",
+    "keyLength": 256,
+    "servers": [
+      { "name": "prod-db-01", "ip": "192.168.3.30" },
+      { "name": "prod-db-02", "ip": "192.168.3.31" },
+      { "name": "prod-cache-01", "ip": "192.168.3.40" }
+    ]
+  },
+  {
+    "id": "ssh-004",
+    "keyOwner": "bob.wilson@example.com",
+    "fingerprint": "SHA256:MnOpQrStUvWxYzAbCdEfGhIjKlMnOpQrStUvWxYz",
+    "lastUsed": "2024-12-10T16:20:00Z",
+    "trustLevel": "Low",
+    "createdAt": "2024-04-05T09:30:00Z",
+    "algorithm": "RSA",
+    "keyLength": 2048,
+    "servers": [
+      { "name": "dev-01", "ip": "192.168.4.50" }
+    ]
+  },
+  {
+    "id": "ssh-005",
+    "keyOwner": "alice.johnson@example.com",
+    "fingerprint": "SHA256:FgHiJkLmNoPqRsT4uV5wX6yZ7aBcDeEfGhIjKlMn",
+    "lastUsed": "2024-12-21T10:00:00Z",
+    "trustLevel": "High",
+    "createdAt": "2024-05-12T13:45:00Z",
+    "algorithm": "ED25519",
+    "keyLength": 256,
+    "servers": [
+      { "name": "prod-web-01", "ip": "192.168.5.60" },
+      { "name": "prod-web-02", "ip": "192.168.5.61" }
+    ]
+  },
+  {
+    "id": "ssh-006",
+    "keyOwner": "charlie.brown@example.com",
+    "fingerprint": "SHA256:CdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOp",
+    "lastUsed": "2024-11-15T12:30:00Z",
+    "trustLevel": "Medium",
+    "createdAt": "2024-06-01T08:00:00Z",
+    "algorithm": "RSA",
+    "keyLength": 4096,
+    "servers": [
+      { "name": "qa-01", "ip": "192.168.6.70" }
+    ]
+  }
+]

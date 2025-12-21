@@ -1,0 +1,62 @@
+[
+  {
+    "id": "csk-001",
+    "keyAlias": "prod-signing-key",
+    "algorithm": "RSA-2048",
+    "protectionLevel": "HSM",
+    "createdAt": "2024-01-10T10:00:00Z",
+    "lastUsed": "2024-12-21T14:30:00Z",
+    "hsmModule": "Thales Luna HSM",
+    "certificateThumbprint": "abc123def456789"
+  },
+  {
+    "id": "csk-002",
+    "keyAlias": "staging-signing-key",
+    "algorithm": "ECDSA-P256",
+    "protectionLevel": "Software",
+    "createdAt": "2024-02-15T11:30:00Z",
+    "lastUsed": "2024-12-20T09:15:00Z",
+    "hsmModule": null,
+    "certificateThumbprint": "def456ghi789012"
+  },
+  {
+    "id": "csk-003",
+    "keyAlias": "release-signing-key",
+    "algorithm": "RSA-4096",
+    "protectionLevel": "HSM",
+    "createdAt": "2024-03-20T14:00:00Z",
+    "lastUsed": "2024-12-21T08:45:00Z",
+    "hsmModule": "Yubico YubiHSM",
+    "certificateThumbprint": "ghi789jkl012345"
+  },
+  {
+    "id": "csk-004",
+    "keyAlias": "legacy-signing-key",
+    "algorithm": "RSA-2048",
+    "protectionLevel": "Software",
+    "createdAt": "2024-04-10T09:20:00Z",
+    "lastUsed": "2024-12-10T11:00:00Z",
+    "hsmModule": null,
+    "certificateThumbprint": "jkl012mno345678"
+  },
+  {
+    "id": "csk-005",
+    "keyAlias": "docker-image-signer",
+    "algorithm": "ECDSA-P384",
+    "protectionLevel": "HSM",
+    "createdAt": "2024-05-05T13:15:00Z",
+    "lastUsed": "2024-12-21T10:30:00Z",
+    "hsmModule": "Thales Luna HSM",
+    "certificateThumbprint": "mno345pqr678901"
+  },
+  {
+    "id": "csk-006",
+    "keyAlias": "backup-signing-key",
+    "algorithm": "RSA-2048",
+    "protectionLevel": "Software",
+    "createdAt": "2024-06-01T08:00:00Z",
+    "lastUsed": "2024-12-15T15:45:00Z",
+    "hsmModule": null,
+    "certificateThumbprint": "pqr678stu901234"
+  }
+]

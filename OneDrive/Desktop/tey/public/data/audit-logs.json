@@ -1,0 +1,143 @@
+[
+  {
+    "id": "audit-001",
+    "timestamp": "2024-12-21T14:30:00Z",
+    "actor": "john.doe@example.com",
+    "actionType": "certificate_viewed",
+    "targetResource": "cert-001",
+    "resourceName": "api.example.com SSL",
+    "status": "success",
+    "metadata": {
+      "ipAddress": "192.168.1.100",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      "duration": 2500
+    }
+  },
+  {
+    "id": "audit-002",
+    "timestamp": "2024-12-21T14:25:00Z",
+    "actor": "admin@example.com",
+    "actionType": "certificate_updated",
+    "targetResource": "cert-002",
+    "resourceName": "www.example.com SSL",
+    "status": "success",
+    "metadata": {
+      "changedFields": ["expiryDate"],
+      "oldValue": "2026-03-14",
+      "newValue": "2026-03-15",
+      "reason": "Auto-renewal"
+    }
+  },
+  {
+    "id": "audit-003",
+    "timestamp": "2024-12-21T14:20:00Z",
+    "actor": "jane.smith@example.com",
+    "actionType": "ssh_key_accessed",
+    "targetResource": "ssh-001",
+    "resourceName": "prod-api-01 Key",
+    "status": "success",
+    "metadata": {
+      "ipAddress": "192.168.1.101",
+      "usageType": "direct_access",
+      "servers": ["prod-api-01", "prod-api-02"]
+    }
+  },
+  {
+    "id": "audit-004",
+    "timestamp": "2024-12-21T14:15:00Z",
+    "actor": "security-audit@example.com",
+    "actionType": "audit_log_exported",
+    "targetResource": "audit_logs",
+    "resourceName": "December 2024 Logs",
+    "status": "success",
+    "metadata": {
+      "exportFormat": "CSV",
+      "recordCount": 1500,
+      "dateRange": "2024-12-01 to 2024-12-21"
+    }
+  },
+  {
+    "id": "audit-005",
+    "timestamp": "2024-12-21T14:10:00Z",
+    "actor": "devops-team@example.com",
+    "actionType": "key_rotated",
+    "targetResource": "csk-001",
+    "resourceName": "prod-signing-key",
+    "status": "success",
+    "metadata": {
+      "oldKeyThumbprint": "abc123",
+      "newKeyThumbprint": "def456",
+      "rotationReason": "scheduled_maintenance"
+    }
+  },
+  {
+    "id": "audit-006",
+    "timestamp": "2024-12-21T14:05:00Z",
+    "actor": "alice.johnson@example.com",
+    "actionType": "permission_denied",
+    "targetResource": "ssh-006",
+    "resourceName": "Legacy SSH Key",
+    "status": "failed",
+    "metadata": {
+      "ipAddress": "192.168.1.102",
+      "reason": "Insufficient privileges",
+      "deniedAction": "delete"
+    }
+  },
+  {
+    "id": "audit-007",
+    "timestamp": "2024-12-21T14:00:00Z",
+    "actor": "bob.wilson@example.com",
+    "actionType": "certificate_viewed",
+    "targetResource": "cert-003",
+    "resourceName": "mail.example.com SSL",
+    "status": "success",
+    "metadata": {
+      "ipAddress": "192.168.1.103",
+      "sessionDuration": 1800
+    }
+  },
+  {
+    "id": "audit-008",
+    "timestamp": "2024-12-21T13:55:00Z",
+    "actor": "admin@example.com",
+    "actionType": "system_backup",
+    "targetResource": "all_keys",
+    "resourceName": "Daily Security Backup",
+    "status": "success",
+    "metadata": {
+      "backupType": "full",
+      "itemsBackedUp": 25,
+      "backupSize": "2.5 MB",
+      "destinationEncrypted": true
+    }
+  },
+  {
+    "id": "audit-009",
+    "timestamp": "2024-12-21T13:50:00Z",
+    "actor": "charlie.brown@example.com",
+    "actionType": "code_signing_performed",
+    "targetResource": "csk-002",
+    "resourceName": "staging-signing-key",
+    "status": "success",
+    "metadata": {
+      "artifactName": "app-v2.1.0.jar",
+      "artifactHash": "sha256:abc123def456",
+      "signingTime": 5000
+    }
+  },
+  {
+    "id": "audit-010",
+    "timestamp": "2024-12-21T13:45:00Z",
+    "actor": "system@example.com",
+    "actionType": "expired_certificate_detected",
+    "targetResource": "cert-004",
+    "resourceName": "internal.example.com SSL",
+    "status": "warning",
+    "metadata": {
+      "expiryDate": "2024-06-01",
+      "daysExpired": 204,
+      "alertType": "critical"
+    }
+  }
+]
