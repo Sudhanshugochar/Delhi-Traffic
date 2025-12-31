@@ -1,6 +1,6 @@
-import connect from './db';
-import Traffic from './models/Traffic';
-import Alert from './models/Alert';
+import connect from './db.js';
+import Traffic from './models/Traffic.js';
+import Alert from './models/Alert.js';
 
 const roads = [
   { name: 'Ring Road', zone: 'Central' },

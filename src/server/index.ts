@@ -2,11 +2,11 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authRoutes from './routes/auth';
-import trafficRoutes from './routes/traffic';
-import alertRoutes from './routes/alerts';
-import connect from './db';
-import { startGenerator } from './generator';
+import authRoutes from './routes/auth.js';
+import trafficRoutes from './routes/traffic.js';
+import alertRoutes from './routes/alerts.js';
+import connect from './db.js';
+import { startGenerator } from './generator.js';
 
 dotenv.config();
 

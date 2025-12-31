@@ -1,6 +1,6 @@
 import express from 'express';
-import Alert from '../models/Alert';
-import connect from '../db';
+import Alert from '../models/Alert.js';
+import connect from '../db.js';
 
 const router = express.Router();
 

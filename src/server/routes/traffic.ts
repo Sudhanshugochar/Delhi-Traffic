@@ -1,7 +1,7 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
-import Traffic from '../models/Traffic';
-import connect from '../db';
+import Traffic from '../models/Traffic.js';
+import connect from '../db.js';
 
 const router = express.Router();
 
