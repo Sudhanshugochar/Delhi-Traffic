@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Delhi Traffic Analysis | Smart Traffic Insights & Real-Time Monitoring</title>
+  <meta name="description" content="Delhi Traffic Analysis project that visualizes traffic congestion, patterns, and insights using data analytics for smarter city planning. Real-time traffic monitoring and analytics." />
+  <meta name="keywords" content="Delhi Traffic, Traffic Analysis Project, Smart City Traffic, Data Analytics, Traffic Visualization, Real-time Traffic Monitoring, Congestion Analysis" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Delhi Traffic Analysis" />
+  <meta property="og:title" content="Delhi Traffic Analysis | Smart Traffic Insights" />
+  <meta property="og:description" content="Analyze Delhi traffic patterns and congestion with our data-driven traffic analysis system." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://delhi-traffic.vercel.app/" />
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+</head>
+<body>
+  <div class="app-grid">
+    <aside class="sidebar">
+      <div class="logo">🗺️ <span>DelhiTraffic</span></div>
+      <nav>
+        <a class="nav-item active"><span class="icon">🏠</span><span class="text">Dashboard</span></a>
+        <a class="nav-item"><span class="icon">📡</span><span class="text">Live Traffic</span></a>
+        <a class="nav-item"><span class="icon">🗺️</span><span class="text">Delhi Map</span></a>
+        <a class="nav-item"><span class="icon">📊</span><span class="text">Analytics</span></a>
+        <a class="nav-item"><span class="icon">🚨</span><span class="text">Alerts</span></a>
+        <a class="nav-item"><span class="icon">⚙️</span><span class="text">Settings</span></a>
+      </nav>
+    </aside>
+
+    <header class="topbar">
+      <div class="top-left">
+        <h2>Real-Time Traffic Overview</h2>
+      </div>
+      <div class="top-right">
+        <div class="live-indicator">🟢 LIVE</div>
+        <div id="dt"></div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div id="page-dashboard" class="page">
+      <section class="seo-content" style="padding: 20px; margin-bottom: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px;">
+        <h1 style="margin: 0 0 15px 0; font-size: 2em;">Delhi Traffic Analysis System</h1>
+        <p style="margin: 10px 0; line-height: 1.6; font-size: 1em;">
+          Delhi Traffic Analysis is a data-driven project designed to study traffic congestion, patterns, and flow across different areas of Delhi. The goal of this system is to help citizens, planners, and authorities understand traffic behavior and improve mobility in the capital city.
+        </p>
+        <h2 style="margin: 20px 0 10px 0; font-size: 1.5em;">About the Project</h2>
+        <p style="margin: 10px 0; line-height: 1.6;">
+          With the rapid increase in vehicles, Delhi faces severe traffic congestion every day. This project analyzes traffic data to identify congestion hotspots and peak traffic hours. By leveraging real-time data analytics and visualization, we provide actionable insights for traffic management and urban planning.
+        </p>
+        <h2 style="margin: 20px 0 10px 0; font-size: 1.5em;">Key Features</h2>
+        <ul style="margin: 10px 0; line-height: 1.8; padding-left: 20px;">
+          <li>Real-time traffic congestion analysis across Delhi</li>
+          <li>Peak hour detection and traffic pattern identification</li>
+          <li>Interactive data visualization on geographical maps</li>
+          <li>Smart city planning support and traffic insights</li>
+          <li>Alert system for high-congestion areas</li>
+          <li>Historical trend analysis and forecasting</li>
+        </ul>
+        <h2 style="margin: 20px 0 10px 0; font-size: 1.5em;">Technologies Used</h2>
+        <ul style="margin: 10px 0; line-height: 1.8; padding-left: 20px;">
+          <li>JavaScript and modern web technologies</li>
+          <li>React and interactive UI frameworks</li>
+          <li>Data Analytics and Python-based processing</li>
+          <li>GIS visualization with Leaflet maps</li>
+          <li>Real-time data monitoring and aggregation</li>
+        </ul>
+      </section>
+      <section class="kpis">
+        <div class="kpi card">
+          <div class="kpi-icon">🚗</div>
+          <div class="kpi-body"><div class="kpi-label">Avg Speed</div><div class="kpi-value" id="avgSpeed">—</div></div>
+        </div>
+        <div class="kpi card">
+          <div class="kpi-icon">🚦</div>
+          <div class="kpi-body"><div class="kpi-label">Vehicle Count</div><div class="kpi-value" id="vehicleCount">—</div></div>
+        </div>
+        <div class="kpi card">
+          <div class="kpi-icon">📉</div>
+          <div class="kpi-body"><div class="kpi-label">Congestion</div><div class="kpi-value" id="congestion">—</div></div>
+        </div>
+        <div class="kpi card">
+          <div class="kpi-icon">🚨</div>
+          <div class="kpi-body"><div class="kpi-label">Active Alerts</div><div class="kpi-value" id="alerts">0</div></div>
+        </div>
+      </section>
+
+      <section class="live-charts">
+        <div class="chart card"><canvas id="speedChart"></canvas></div>
+        <div class="chart card"><canvas id="countChart"></canvas></div>
+      </section>
+
+      <section class="map-area">
+        <div class="map card" id="mapWrap">
+          <div id="map" style="height:520px;border-radius:12px"></div>
+          <div class="map-controls">
+            <label>Region</label>
+            <select id="mapRegionFilter"><option value="all">All</option><option>North</option><option>Central</option><option>West</option><option>East</option><option>South</option></select>
+            <label>Layers</label>
+            <div class="layer-toggles"><label><input type="checkbox" id="mapLayerHeat" checked /> Heatmap</label><label><input type="checkbox" id="mapLayerIncidents" checked /> Incidents</label></div>
+            <label>Time range</label>
+            <input id="mapTimeRange" type="range" min="15" max="120" value="30" />
+            <div class="time-label">Last <span id="timeRangeLabel">30</span> min</div>
+          </div>
+          <div id="mapInfoCard" class="map-info-card" style="display:none">
+            <button id="closeMapInfo">×</button>
+            <h4 id="infoRoad">Road</h4>
+            <div class="info-metrics">
+              <div>Avg speed: <strong id="infoSpeed">—</strong></div>
+              <div>Vehicles: <strong id="infoVehicles">—</strong></div>
+              <div>Last incident: <span id="infoIncident">—</span></div>
+            </div>
+            <div class="info-spark"><canvas id="infoSpark" width="300" height="80"></canvas></div>
+            <div class="info-actions"><button id="focusOnMap">Focus on map</button><button id="openAlertForRoad">Create Alert</button></div>
+          </div>
+        </div>
+        <div class="insights card" id="insightsCard"><h4>AI Insights</h4><div id="insightsList"></div></div>
+      </section>
+
+      <section class="zones card">
+        <h3>Zone Command View</h3>
+        <div id="zonesGrid" class="zones-grid"></div>
+      </section>
+
+      <section class="data-area">
+        <div class="table card" id="roadTable">
+          <div class="table-header"><h3>Road Status</h3></div>
+          <div class="table-body">
+            <table>
+              <thead><tr><th>Road</th><th>Region</th><th>Speed</th><th>Vehicles</th><th>Status</th></tr></thead>
+              <tbody id="roadsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <aside class="alerts-panel card" id="alertsList">
+          <h3>Alerts</h3>
+          <div class="alerts-body"><ul id="alertsUl"></ul></div>
+        </aside>
+      </section>
+      </div>
+
+      <div id="page-live" class="page" style="display:none">
+        <div class="filters card">
+          <select id="regionFilter"><option value="all">All regions</option><option>North</option><option>Central</option><option>West</option><option>East</option><option>South</option></select>
+          <select id="levelFilter"><option value="all">All levels</option><option value="low">Low</option><option value="med">Medium</option><option value="high">High</option></select>
+          <input id="searchRoad" placeholder="Search road" />
+          <div class="live-ind small">🟢 LIVE</div>
+        </div>
+        <div class="table card">
+          <div class="table-header"><h3>Live Traffic</h3></div>
+          <div class="table-body"><table><thead><tr><th>Road</th><th>Region</th><th>Speed</th><th>Vehicles</th><th>Status</th><th>Last Updated</th></tr></thead><tbody id="liveRoadsBody"></tbody></table></div>
+        </div>
+      </div>
+
+      <div id="page-analytics" class="page" style="display:none">
+        <div class="card"><h3>Analytics</h3>
+          <div class="analytics-grid">
+            <canvas id="trendChart"></canvas>
+            <canvas id="forecastChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-alerts" class="page" style="display:none">
+        <div class="card"><h3>Alerts</h3>
+          <div id="alertsCards" class="alerts-cards"></div>
+        </div>
+      </div>
+
+      <div id="page-settings" class="page" style="display:none">
+        <div class="card"><h3>Settings</h3>
+          <div class="settings-grid">
+            <div class="setting"><label>Theme</label><select id="themeSelect"><option value="dark">Dark</option><option value="light">Light</option></select></div>
+            <div class="setting"><label>Accent</label><input type="color" id="accentPicker" value="#60A5FA" /></div>
+            <div class="setting"><label>Auto-refresh</label><select id="refreshInterval"><option value="5">5s</option><option value="10">10s</option><option value="30">30s</option></select></div>
+            <div class="setting"><label>Alerts</label><input type="checkbox" id="toggleAlerts" checked /></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="detailDrawer" class="detail-drawer" style="display:none">
+    <div class="drawer-inner">
+      <button id="closeDrawer">Close</button>
+      <h3 id="drawerRoad">Road</h3>
+      <div id="drawerChartWrap"><canvas id="drawerChart"></canvas></div>
+      <div id="drawerEvents"></div>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
